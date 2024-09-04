@@ -1,9 +1,10 @@
+import Header from "@/components/Header";
+import TanstackProvider from "@/providers/tanstack.provider";
 import theme from "@/utils/theme";
 import { ThemeProvider } from "@mui/material/styles";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import TanstackProvider from "@/providers/tanstack.provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ThemeProvider theme={theme}>
-        {/* <body className={inter.className}>{children}</body> */}
         <TanstackProvider>
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}>
+            <Header />
+            {children}
+          </body>
         </TanstackProvider>
       </ThemeProvider>
     </html>
