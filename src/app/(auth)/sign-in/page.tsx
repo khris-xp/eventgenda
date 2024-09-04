@@ -1,25 +1,44 @@
 "use client";
 
+import { useAuth } from "@/hooks/useAuth";
+import { authService } from "@/services/auth.service";
 import { Box, FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SetStateAction, useState } from "react";
 
+interface EventProps {
+  target: {
+    value: SetStateAction<string>;
+  };
+}
+
 export default function SignInPage() {
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { loginMutation } = useAuth();
 
-  const handleEmailChange = (e: {
-    target: { value: SetStateAction<string> };
-  }) => {
+  const handleSignIn = async () => {
+    try {
+      const response = await authService.login({ email, password });
+      await loginMutation.mutateAsync({ email, password });
+      alert(response.message);
+      router.push("/");
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const handleEmailChange = (e: EventProps) => {
     setEmail(e.target.value);
   };
 
-  const handlePasswordChange = (e: {
-    target: { value: SetStateAction<string> };
-  }) => {
+  const handlePasswordChange = (e: EventProps) => {
     setPassword(e.target.value);
   };
+
   return (
     <Box
       sx={{
@@ -89,8 +108,7 @@ export default function SignInPage() {
           <div className="mt-6">
             <button
               onClick={() => {
-                console.log("Email:", email);
-                console.log("Password:", password);
+                handleSignIn();
               }}
               className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50"
             >
