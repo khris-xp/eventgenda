@@ -1,3 +1,5 @@
+import Header from "@/components/Header";
+import TanstackProvider from "@/providers/tanstack.provider";
 import theme from "@/utils/theme";
 import { ThemeProvider } from "@mui/material/styles";
 import type { Metadata } from "next";
@@ -19,7 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ThemeProvider theme={theme}>
-        <body className={inter.className}>{children}</body>
+        <TanstackProvider>
+          <body className={inter.className}>
+            <Header />
+            {children}
+          </body>
+        </TanstackProvider>
       </ThemeProvider>
     </html>
   );
