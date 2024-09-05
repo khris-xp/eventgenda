@@ -1,12 +1,12 @@
 import { LoginDto } from "@/common/dto/login.dto";
 import Cookies from "js-cookie";
 import { useMutation, useQuery } from "react-query";
-import { authService } from "../services/auth.service";
-import { useAuthStore } from "../stores/auth.store";
+import { authService } from "@/services/auth.service";
+import { AuthStore } from "@/stores/auth.store";
 
 export const useAuth = () => {
   const cookies = Cookies;
-  const { setAuth, actions } = useAuthStore();
+  const { setAuth, actions } = AuthStore();
 
   const loginMutation = useMutation(
     async (authDto: LoginDto) => {

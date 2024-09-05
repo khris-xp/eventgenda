@@ -13,7 +13,7 @@ interface AuthStore {
   };
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const AuthStore = create<AuthStore>((set) => ({
   auth: UserInit,
   setAuth: (auth) => set({ auth }),
   actions: {
