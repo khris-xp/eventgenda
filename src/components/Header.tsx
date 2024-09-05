@@ -16,7 +16,7 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import * as React from "react";
 
-const pages = ["Events", "Funding", "Hackathons", "Jobs", "News", "Resources"];
+const pages = ["Events", "Funding", "Hackathons", "Blogs"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
@@ -97,15 +97,7 @@ function Header() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link
-                    href={
-                      page === "Products"
-                        ? "/sign-in"
-                        : page === "Pricing"
-                          ? "/sign-up"
-                          : "/"
-                    }
-                  >
+                  <Link href={`/${page.toLowerCase()}`}>
                     <Typography sx={{ textAlign: "center" }}>{page}</Typography>
                   </Link>
                 </MenuItem>
@@ -139,15 +131,7 @@ function Header() {
                 key={page}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                <Link
-                  href={
-                    page === "Products"
-                      ? "/sign-in"
-                      : page === "Pricing"
-                        ? "/sign-up"
-                        : "/"
-                  }
-                >
+                <Link href={`/${page.toLowerCase()}`}>
                   <Typography sx={{ textAlign: "center" }}>{page}</Typography>
                 </Link>
               </Button>
