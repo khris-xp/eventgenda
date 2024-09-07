@@ -15,12 +15,15 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import * as React from "react";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const pages = ["Events", "Funding", "Hackathons", "Blogs"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
-  const { userProfile } = useAuth();
+  const { userProfile, logout: authLogout } = useAuth();
+  const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -31,6 +34,7 @@ function Header() {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -41,6 +45,26 @@ function Header() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You will be logged out of your account!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, log out",
+        cancelButtonText: "No, cancel",
+      });
+
+      if (result.isConfirmed) {
+        await authLogout();
+        router.push("/sign-in");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -82,15 +106,9 @@ function Header() {
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
               keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
@@ -171,23 +189,32 @@ function Header() {
               sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
               keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    {setting}
-                  </Typography>
+                  {setting === "Logout" ? (
+                    <Typography
+                      sx={{ textAlign: "center", cursor: "pointer" }}
+                      onClick={handleLogout}
+                    >
+                      {setting}
+                    </Typography>
+                  ) : setting === "Profile" ? (
+                    <Link href="/profile">
+                      <Typography sx={{ textAlign: "center" }}>
+                        {setting}
+                      </Typography>
+                    </Link>
+                  ) : (
+                    <Typography sx={{ textAlign: "center" }}>
+                      {setting}
+                    </Typography>
+                  )}
                 </MenuItem>
               ))}
             </Menu>
@@ -197,4 +224,5 @@ function Header() {
     </AppBar>
   );
 }
+
 export default Header;
