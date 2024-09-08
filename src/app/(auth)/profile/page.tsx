@@ -1,19 +1,21 @@
 "use client";
+import { ProfileAvatarURLs } from "@/enums/profile.enum";
 import { useAuth } from "@/hooks/useAuth";
-import { usePathname } from "next/navigation";
-import { Box, Button, Grid, Typography } from "@mui/material";
-import React from "react";
-import SubjectIcon from "@mui/icons-material/Subject";
-import HistoryIcon from "@mui/icons-material/History";
-import PersonIcon from "@mui/icons-material/Person";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import StarsIcon from "@mui/icons-material/Stars";
 import EditIcon from "@mui/icons-material/Edit";
+import HistoryIcon from "@mui/icons-material/History";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import PersonIcon from "@mui/icons-material/Person";
+import StarsIcon from "@mui/icons-material/Stars";
+import SubjectIcon from "@mui/icons-material/Subject";
+import { Box, Grid, Typography } from "@mui/material";
+import { usePathname } from "next/navigation";
+import React from "react";
 
 export default function ProfilePage() {
   const { userProfile } = useAuth();
   const pathname = usePathname();
   const isOverviewPage = pathname === "/profile";
+
   return (
     <>
       <main className="ml-20 mr-20" style={{ color: "#1b1042" }}>
@@ -54,7 +56,7 @@ export default function ProfilePage() {
           />
           <Box
             component={"img"}
-            src="https://scontent.fbkk22-4.fna.fbcdn.net/v/t1.6435-1/152762169_1139909896454374_8830029524472143364_n.jpg?stp=dst-jpg_s200x200&_nc_cat=109&ccb=1-7&_nc_sid=e4545e&_nc_eui2=AeG0nnwcK7_EYEykdSYbq2mqJJjMuuUa_tIkmMy65Rr-0h1zzBZcXo_6z2MzB-c30jydZYQFNstVik1g9VVokdZv&_nc_ohc=f6OFSJpY7j8Q7kNvgFdfXWq&_nc_ht=scontent.fbkk22-4.fna&oh=00_AYCKLpZ4tznS6gpDShaAeZqoUPJu3KiSFvaPK7Hal8XiCQ&oe=67026C2F"
+            src={userProfile?.data.profileImage || ProfileAvatarURLs.PROFILE}
             className="rounded-full border-4 border-red-[#e4e4ec]"
             sx={{
               width: "150px",

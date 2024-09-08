@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SetStateAction, useState } from "react";
+import Swal from "sweetalert2";
 
 interface EventProps {
   target: {
@@ -24,7 +25,18 @@ export default function SignInPage() {
     try {
       const response = await authService.login({ email, password });
       await loginMutation.mutateAsync({ email, password });
-      alert(response.message);
+      const result = await Swal.fire({
+        title: response.message,
+        text: "Your account has been successfully logged in!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        router.push("/");
+      }
       router.push("/");
     } catch (error) {
       alert(error);

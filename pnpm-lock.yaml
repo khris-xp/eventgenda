@@ -35,6 +35,9 @@ dependencies:
   react-query:
     specifier: ^3.39.3
     version: 3.39.3(react-dom@18.0.0)(react@18.0.0)
+  sweetalert2:
+    specifier: ^11.13.2
+    version: 11.13.2
   zustand:
     specifier: ^4.5.5
     version: 4.5.5(@types/react@18.0.0)(react@18.0.0)
@@ -4592,6 +4595,13 @@ packages:
         integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==,
       }
     engines: { node: ">= 0.4" }
+
+  /sweetalert2@11.13.2:
+    resolution:
+      {
+        integrity: sha512-Q361QVJrDce3pA+46m2JmfDQyxxlmVE6t7ScoMwubm2PQKTlUqaMpzWq/DZRSPL8Sg2hUCzUAXQ9dwMPnbsy7Q==,
+      }
+    dev: false
 
   /tailwindcss@3.4.1:
     resolution:
