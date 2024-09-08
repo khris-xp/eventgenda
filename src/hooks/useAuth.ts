@@ -1,12 +1,12 @@
 import { LoginDto } from "@/common/dto/login.dto";
+import { authService } from "@/services/auth.service";
+import { useAuthStore } from "@/stores/auth.store";
 import Cookies from "js-cookie";
 import { useMutation, useQuery } from "react-query";
-import { authService } from "@/services/auth.service";
-import { AuthStore } from "@/stores/auth.store";
 
 export const useAuth = () => {
   const cookies = Cookies;
-  const { setAuth, actions } = AuthStore();
+  const { setAuthentication, setUser, action } = useAuthStore();
 
   const loginMutation = useMutation(
     async (authDto: LoginDto) => {
@@ -31,13 +31,15 @@ export const useAuth = () => {
     },
     {
       onSuccess: (data) => {
-        setAuth(data.data);
+        setUser(data.data);
+        setAuthentication(data.success);
       },
       onError: (error) => {
         console.error("Error fetching user profile:", error);
-        actions.logout();
+        setAuthentication(false);
       },
       enabled: !!cookies.get("token"),
+      refetchOnWindowFocus: false,
     },
   );
 
@@ -46,6 +48,6 @@ export const useAuth = () => {
     userProfileQuery,
     userProfile: userProfileQuery.data,
     userProfileLoading: userProfileQuery.isLoading,
-    logout: actions.logout,
+    logout: action.logout,
   };
 };
