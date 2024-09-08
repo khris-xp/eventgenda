@@ -59,7 +59,7 @@ function Header() {
       });
 
       if (result.isConfirmed) {
-        await authLogout();
+        authLogout();
         router.push("/sign-in");
       }
     } catch (error) {
