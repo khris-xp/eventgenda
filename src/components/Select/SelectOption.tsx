@@ -1,13 +1,15 @@
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { SvgIconTypeMap } from "@mui/material/SvgIcon";
 import * as React from "react";
 import { Fragment } from "react";
 
 type Props = {
   title: string;
-  icon: any;
+  icon: React.ReactElement<OverridableComponent<SvgIconTypeMap<{}, "svg">>>;
   options: string[];
   width?: string;
 };
