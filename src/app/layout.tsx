@@ -23,7 +23,10 @@ export default function RootLayout({
       <ThemeProvider theme={theme}>
         <TanstackProvider>
           <body className={inter.className}>
-            <Header />
+            <div className="mb-16">
+              <Header />
+            </div>
+
             {children}
           </body>
         </TanstackProvider>
