@@ -137,7 +137,7 @@ export default function ProfilePage() {
                 </React.Fragment>
               ))}
               <a
-                href="#"
+                href="/edit-profile"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -199,7 +199,7 @@ export default function ProfilePage() {
               <Typography className="" sx={{ fontWeight: "600" }}>
                 Biography
                 <a
-                  href="#"
+                  href="/edit-profile"
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
