@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthStore } from "@/stores/auth.store";
 import { useAuth } from "@/hooks/useAuth";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -17,12 +18,17 @@ import Link from "next/link";
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { ProfileAvatarURLs } from "@/enums/profile.enum";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import PersonIcon from "@mui/icons-material/Person";
+import StarsIcon from "@mui/icons-material/Stars";
 
 const pages = ["Events", "Funding", "Hackathons", "Blogs"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
   const { userProfile, logout: authLogout } = useAuth();
+  const { auth, actions } = AuthStore();
   const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -59,95 +65,67 @@ function Header() {
       });
 
       if (result.isConfirmed) {
-        authLogout();
-        router.push("/sign-in");
+        actions.logout();
+        setTimeout(() => {
+          window.location.href = "/sign-in";
+        }, 100); // Adjust the timeout duration if needed
       }
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
-  return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <EmojiEventsIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-          />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            Eventgenda
-          </Typography>
+  const handleMenuItemClick = (setting: string) => {
+    if (setting === "Logout") {
+      handleLogout();
+    } else if (setting === "Profile") {
+      handleCloseUserMenu();
+      router.push("/profile");
+    } else {
+      handleCloseUserMenu();
+    }
+  };
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-              keepMounted
-              transformOrigin={{ vertical: "top", horizontal: "left" }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link href={`/${page.toLowerCase()}`}>
-                    <Typography sx={{ textAlign: "center" }}>{page}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <EmojiEventsIcon
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+  return (
+    <AppBar
+      color="inherit"
+      position="fixed"
+      className="bg-gray-100 backdrop-blur-sm bg-opacity-70 border border-b-1 shadow-none"
+    >
+      <Container maxWidth="xl">
+        <Toolbar
+          disableGutters
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            component="img"
+            src="/img/logo.png"
+            alt="Eventgenda Logo"
             sx={{
               mr: 2,
-              display: { xs: "flex", md: "none" },
+              width: 180,
+              height: "auto",
+              marginLeft: "50px",
+            }}
+          />
+
+          <Box
+            sx={{
               flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
+              display: { xs: "none", md: "flex" },
+              justifyContent: "center",
+              gap: "30px",
+              marginLeft: "-100px",
             }}
           >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: "black", display: "block" }}
               >
                 <Link href={`/${page.toLowerCase()}`}>
                   <Typography sx={{ textAlign: "center" }}>{page}</Typography>
@@ -155,70 +133,97 @@ function Header() {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Box sx={{ color: "white" }}>
-                  {userProfile ? (
-                    <Typography
-                      variant="h6"
-                      noWrap
-                      sx={{
-                        mr: 2,
-                        display: { xs: "none", md: "flex" },
-                      }}
-                    >
-                      {userProfile.data.fullName}
-                    </Typography>
-                  ) : (
-                    <Typography
-                      variant="h6"
-                      noWrap
-                      sx={{
-                        mr: 2,
-                        display: { xs: "none", md: "flex" },
-                      }}
-                    >
-                      <Link href="/sign-in">Sign In</Link>
-                    </Typography>
-                  )}
-                </Box>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              keepMounted
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+
+          {userProfile ? (
+            <Box
+              sx={{ flexGrow: 0, marginRight: "60px", border: "solid 1 gray" }}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  {setting === "Logout" ? (
+              <Tooltip title={userProfile?.data.userName}>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Box sx={{ color: "black" }}>
+                    <div className="flex">
+                      <Box
+                        component="img"
+                        className="rounded-circle article-img w-11"
+                        src={
+                          userProfile?.data.profileImage ||
+                          ProfileAvatarURLs.PROFILE
+                        }
+                        id="img"
+                        alt="Profile Image"
+                        style={{ borderRadius: "50%" }}
+                      />
+                    </div>
+                  </Box>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                keepMounted
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <div className="font-bold ml-4 mr-4">
+                  {userProfile?.data.fullName}
+                </div>
+
+                <div className="p-2">
+                  <div style={{ textTransform: "uppercase", display: "flex" }}>
+                    <PersonIcon className="m-1" />
+                    <div className="p-1 font-semibold">
+                      {userProfile?.data.role}
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex" }}>
+                    <MonetizationOnIcon className="m-1" />
+                    <div className="p-1">
+                      <span className="font-semibold">
+                        {userProfile?.data.coin}
+                      </span>
+                      <span> Coins</span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex" }}>
+                    <StarsIcon className="m-1" />
+                    <div className="p-1">
+                      <span className="font-semibold">
+                        {userProfile?.data.reward}
+                      </span>
+                      <span> Rewards</span>
+                    </div>
+                  </div>
+                  <hr className="mt-3 mb-3" />
+                </div>
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={() => handleMenuItemClick(setting)}
+                  >
                     <Typography
-                      sx={{ textAlign: "center", cursor: "pointer" }}
-                      onClick={handleLogout}
+                      sx={{
+                        textAlign: "center",
+                        cursor: setting === "Logout" ? "pointer" : "default",
+                      }}
                     >
                       {setting}
                     </Typography>
-                  ) : setting === "Profile" ? (
-                    <Link href="/profile">
-                      <Typography sx={{ textAlign: "center" }}>
-                        {setting}
-                      </Typography>
-                    </Link>
-                  ) : (
-                    <Typography sx={{ textAlign: "center" }}>
-                      {setting}
-                    </Typography>
-                  )}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <Box sx={{ flexGrow: 0, marginRight: "60px" }}>
+              <Typography variant="h6" noWrap sx={{ mr: 2, color: "#4329a6" }}>
+                <Link href="/sign-in">Sign In</Link>
+              </Typography>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
