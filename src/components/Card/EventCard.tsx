@@ -5,7 +5,7 @@ import ProgressBar from "../Progress/ProgressBar";
 
 export default function EventCard() {
   return (
-    <div className="bg-white relative w-[330px] rounded-xl shadow border border-indigo-300">
+    <div className="bg-white relative w-[330px] rounded-xl shadow border border-indigo-300 hover:border-indigo-500 duration-100 cursor-pointer">
       <div className="h-36 relative">
         <div className="h-full relative">
           <Image
@@ -23,6 +23,11 @@ export default function EventCard() {
               width={1000}
               height={1000}
             />
+          </div>
+          <div className="absolute top-0 left-1">
+            <div className=" bg-indigo-800 text-white text-sm p-2 px-5 m-2 rounded-lg border border-gray-700 shadow">
+              Final Build
+            </div>
           </div>
         </div>
       </div>

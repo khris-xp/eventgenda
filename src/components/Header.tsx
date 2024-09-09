@@ -1,9 +1,11 @@
 "use client";
 
-import { AuthStore } from "@/stores/auth.store";
+import { ProfileAvatarURLs } from "@/enums/profile.enum";
 import { useAuth } from "@/hooks/useAuth";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useAuthStore } from "@/stores/auth.store";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import PersonIcon from "@mui/icons-material/Person";
+import StarsIcon from "@mui/icons-material/Stars";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -15,20 +17,16 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import * as React from "react";
 import { useRouter } from "next/navigation";
+import * as React from "react";
 import Swal from "sweetalert2";
-import { ProfileAvatarURLs } from "@/enums/profile.enum";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PersonIcon from "@mui/icons-material/Person";
-import StarsIcon from "@mui/icons-material/Stars";
 
 const pages = ["Events", "Funding", "Hackathons", "Blogs"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
   const { userProfile, logout: authLogout } = useAuth();
-  const { auth, actions } = AuthStore();
+  const { user, action } = useAuthStore();
   const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -65,10 +63,10 @@ function Header() {
       });
 
       if (result.isConfirmed) {
-        actions.logout();
+        action.logout();
         setTimeout(() => {
-          window.location.href = "/sign-in";
-        }, 100); // Adjust the timeout duration if needed
+          router.push("/sign-in");
+        }, 100);
       }
     } catch (error) {
       console.error("Logout failed:", error);
