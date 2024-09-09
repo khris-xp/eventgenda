@@ -66,6 +66,7 @@ function Header() {
         action.logout();
         setTimeout(() => {
           router.push("/sign-in");
+          window.location.href = "/sign-in";
         }, 100);
       }
     } catch (error) {
