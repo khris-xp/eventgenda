@@ -24,6 +24,11 @@ export default function EventCard() {
               height={1000}
             />
           </div>
+          <div className="absolute top-0 left-1">
+            <div className=" bg-indigo-800 text-white text-sm p-2 px-5 m-2 rounded-lg border border-gray-700 shadow">
+              Final Build
+            </div>
+          </div>
         </div>
       </div>
 
