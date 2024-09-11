@@ -8,7 +8,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
-      <main>{children}</main> {/* Render the rest of the content */}
+      <main>{children}</main>
     </>
   );
 };
