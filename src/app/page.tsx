@@ -1,7 +1,15 @@
 "use client";
 
-import { Box, Typography, Button, Container, Card, CardContent, CardMedia } from "@mui/material";
-import Homeheader from "@/components/Homeheader"; 
+import {
+  Box,
+  Typography,
+  Button,
+  Container,
+  Card,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
+import Homeheader from "@/components/Homeheader";
 
 export default function Home() {
   return (
@@ -12,12 +20,17 @@ export default function Home() {
           The platform to Launch and Join Hackathons
         </Typography>
         <Typography variant="body1" sx={{ mb: 4 }}>
-          TAIKAI is a hackathon platform that connects companies with talented developers 
-          to create solutions, solve problems, and win prizes.
+          TAIKAI is a hackathon platform that connects companies with talented
+          developers to create solutions, solve problems, and win prizes.
         </Typography>
 
         <Box sx={{ mt: 8, textAlign: "center", py: 6 }}>
-          <Button variant="contained" size="large" color="primary" sx={{ mr: 2 }}>
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            sx={{ mr: 2 }}
+          >
             For Participants
           </Button>
           <Button variant="outlined" size="large" color="primary">
@@ -26,20 +39,32 @@ export default function Home() {
         </Box>
 
         <Box sx={{ textAlign: "center", my: 6 }}>
-          <img src="/photos/view-homepage.jpg" alt="Hackathon overview" style={{ maxWidth: "100%", height: "auto" }} />
+          <img
+            src="/photos/view-homepage.jpg"
+            alt="Hackathon overview"
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
         </Box>
 
         <Box sx={{ mt: 6 }}>
           <Typography variant="h4" component="h2" gutterBottom>
             Featured Hackathons
           </Typography>
-          <Box sx={{ display: "flex", gap: 2, justifyContent: "space-between", flexWrap: "wrap", mt: 4 }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              mt: 4,
+            }}
+          >
             {/* First Hackathon Card */}
             <Card sx={{ width: "24%", minWidth: 275 }}>
-            <CardMedia
+              <CardMedia
                 component="img"
                 height="140"
-                image="/photos/view-hackathon-1.jpg" 
+                image="/photos/view-hackathon-1.jpg"
                 alt="Hackathon Event 1"
               />
               <CardContent>
@@ -83,7 +108,8 @@ export default function Home() {
                   Hackathon Event 3
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Innovate, collaborate, and win amazing prizes in this hackathon.
+                  Innovate, collaborate, and win amazing prizes in this
+                  hackathon.
                 </Typography>
               </CardContent>
             </Card>
@@ -109,13 +135,16 @@ export default function Home() {
         </Box>
 
         {/* Another section: Garden */}
-        <Box sx={{ mt: 8, textAlign: "center", backgroundColor: "#f5f5f5", py: 6 }}>
+        <Box
+          sx={{ mt: 8, textAlign: "center", backgroundColor: "#f5f5f5", py: 6 }}
+        >
           <Typography variant="h4" component="h3">
             Nurturing ideas, harvesting success.
           </Typography>
           <Typography variant="body1" sx={{ mt: 2, mb: 4 }}>
-            Join TAIKAI Garden, where top hackathon projects find the perfect soil to grow! 
-            Showcase your work and grow your projects into real-world solutions.
+            Join TAIKAI Garden, where top hackathon projects find the perfect
+            soil to grow! Showcase your work and grow your projects into
+            real-world solutions.
           </Typography>
           <Button variant="contained" color="secondary">
             Join the waitlist
