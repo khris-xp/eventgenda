@@ -1,6 +1,8 @@
 "use client";
 import Homeheader from "@/components/Homeheader";
 import EventCard from "@/components/Card/EventCard";
+import Link from "next/link";
+
 import {
   Box,
   Typography,
@@ -70,7 +72,13 @@ export default function Home() {
             <EventCard />
           </div>
           <div className="flex justify-center mt-7">
-            <Button variant="outlined">See all hackathons</Button>
+            <Box sx={{ mt: 3, textAlign: "center", py: 2.5 }}>
+              <Link href="/events" passHref>
+                <Button variant="outlined" size="large" color="primary">
+                  See all hackathons
+                </Button>
+              </Link>
+            </Box>
           </div>
         </Box>
 
