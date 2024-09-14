@@ -1,122 +1,58 @@
 "use client";
-import Homeheader from "@/components/Homeheader";
-import EventCard from "@/components/Card/EventCard";
-import Link from "next/link";
+import { Benefits } from "@/components/Banner/Benefits";
+import { Cta } from "@/components/Banner/Cta";
+import { Faq } from "@/components/Banner/Faq";
+import { SectionTitle } from "@/components/Banner/SectionTitle";
+import { Testimonials } from "@/components/Banner/Testimonial";
+import { Video } from "@/components/Banner/Video";
+import { Hero } from "@/components/Hero/Hero";
+import { benefitOne, benefitTwo } from "@/constants/benefit.constants";
+import { Container } from "@mui/material";
 
-import {
-  Box,
-  Typography,
-  Button,
-  Container,
-  Card,
-  CardContent,
-  CardMedia,
-} from "@mui/material";
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <Homeheader>
-      {/* Main */}
-      <Container maxWidth="xl" sx={{ mt: 5, pb: 40 }}>
-        <div className="justify-center container mx-auto py-5">
-          <Typography
-            variant="h3"
-            sx={{ mt: 4, mb: 4 }}
-            component="h1"
-            gutterBottom
-          >
-            The platform to Launch and Participate in Hackathons
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 4 }}>
-            Eventgenda is a hackathon platform that connects companies with
-            talented developers to create solutions, solve problems, and win
-            prizes.
-          </Typography>
-        </div>
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <img
-            src="/imagepages/view-homepage.jpg"
-            alt="Hackathon overview"
-            style={{ maxWidth: "100%", height: "auto" }}
-          />
-        </Box>
-
-        <Box sx={{ mt: 3, textAlign: "center", py: 2.5 }}>
-          <Button
-            variant="contained"
-            size="large"
-            color="primary"
-            sx={{ mr: 2 }}
-          >
-            For Participants
-          </Button>
-          <Button variant="outlined" size="large" color="primary">
-            For Organizations
-          </Button>
-        </Box>
-
-        <Box sx={{ mt: 6 }}>
-          <Typography
-            sx={{ mb: 5 }}
-            variant="h4"
-            component="h2"
-            gutterBottom
-            textAlign="center"
-          >
-            Featured Hackathons
-          </Typography>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6 lg:gap-3 sm:gap-2 sm:ml-10 lg:ml-6 xl:ml-8">
-            <EventCard />
-            <EventCard />
-            <EventCard />
-            <EventCard />
-          </div>
-          <div className="flex justify-center mt-7">
-            <Box sx={{ mt: 3, textAlign: "center", py: 2.5 }}>
-              <Link href="/events" passHref>
-                <Button variant="outlined" size="large" color="primary">
-                  See all hackathons
-                </Button>
-              </Link>
-            </Box>
-          </div>
-        </Box>
-
-        {/* Another section: Garden */}
-        <Box
-          sx={{ mt: 8, textAlign: "center", backgroundColor: "#f5f5f5", py: 6 }}
-        >
-          <Typography variant="h4" component="h3">
-            Nurturing ideas, harvesting success.
-          </Typography>
-          <Typography variant="body1" sx={{ mt: 2, mb: 4 }}>
-            Join TAIKAI Garden, where top hackathon projects find the perfect
-            soil to grow! Showcase your work and grow your projects into
-            real-world solutions.
-          </Typography>
-          <Button variant="contained" color="secondary">
-            Join the waitlist
-          </Button>
-        </Box>
-      </Container>
-
-      {/* Footer */}
-      <Box
-        sx={{
-          textAlign: "center",
-          py: 3,
-          backgroundColor: "#aaaaaa",
-          color: "white",
-        }}
+    <Container>
+      <Hero />
+      <SectionTitle
+        preTitle="Nextly Benefits"
+        title=" Why should you use this landing page"
       >
-        <Typography variant="body2">
-          © 2024 Eventgenda. All Rights Reserved.
-        </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          End Credit: Powered by [Eventgenda or Organization]
-        </Typography>
-      </Box>
-      {/* Footer or other components */}
-    </Homeheader>
+        Nextly is a free landing page & marketing website template for startups
+        and indie projects. Its built with Next.js & TailwindCSS. And its
+        completely open-source.
+      </SectionTitle>
+
+      <Benefits data={benefitOne} />
+      <Benefits imgPos="right" data={benefitTwo} />
+
+      <SectionTitle
+        preTitle="Watch a video"
+        title="Learn how to fullfil your needs"
+      >
+        This section is to highlight a promo or demo video of your product.
+        Analysts says a landing page with video has 3% more conversion rate. So,
+        don&apos;t forget to add one. Just like this.
+      </SectionTitle>
+
+      <Video videoId="fZ0D0cnR88E" />
+
+      <SectionTitle
+        preTitle="Testimonials"
+        title="Here's what our customers said"
+      >
+        Testimonials is a great way to increase the brand trust and awareness.
+        Use this section to highlight your popular customers.
+      </SectionTitle>
+
+      <Testimonials />
+
+      <SectionTitle preTitle="FAQ" title="Frequently Asked Questions">
+        Answer your customers possible questions here, it will increase the
+        conversion rate as well as support or chat requests.
+      </SectionTitle>
+
+      <Faq />
+      <Cta />
+    </Container>
   );
 }
