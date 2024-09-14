@@ -63,7 +63,7 @@ export default function Home() {
             gutterBottom
             textAlign="center"
           >
-            Featured Hackathons
+            Featured Hackathon
           </Typography>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6 lg:gap-3 sm:gap-2 sm:ml-10 lg:ml-6 xl:ml-8">
             <EventCard />
