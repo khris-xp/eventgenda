@@ -1,10 +1,10 @@
 import Image from "next/image";
-import heroImg from "../../public/img/hero.png";
+import { Fragment } from "react";
 import { Container } from "../Containers/Container";
 
 export const Hero = () => {
   return (
-    <>
+    <Fragment>
       <Container className="flex flex-wrap ">
         <div className="flex items-center w-full lg:w-1/2">
           <div className="max-w-2xl mb-8">
@@ -88,7 +88,7 @@ export const Hero = () => {
           </div>
         </div>
       </Container>
-    </>
+    </Fragment>
   );
 };
 
