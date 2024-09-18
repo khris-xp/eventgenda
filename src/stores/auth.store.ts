@@ -1,5 +1,5 @@
 import { UserInit } from "@/constants/user.constant";
-import { UserProfileType } from "@/types/auth-response.type";
+import { UserProfileType } from "@/types/user.type";
 import Cookies from "js-cookie";
 import create from "zustand";
 
