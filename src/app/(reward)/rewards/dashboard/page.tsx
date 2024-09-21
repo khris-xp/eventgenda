@@ -5,7 +5,7 @@ import { RewardConstant, RewardType } from "@/constants/reward.constant";
 import { TableCell, TableRow } from "@mui/material";
 import Image from "next/image";
 
-export default function EventDashboardPage() {
+export default function RewardDashboardPage() {
   const rewardHeaders = ["", "Name", "Description", "Price"];
 
   const renderRewardRow = (reward: RewardType) => (
