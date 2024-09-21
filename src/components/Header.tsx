@@ -35,16 +35,8 @@ function Header() {
     null,
   );
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -99,17 +91,19 @@ function Header() {
             alignItems: "center",
           }}
         >
-          <Box
-            component="img"
-            src="/img/logo.png"
-            alt="Eventgenda Logo"
-            sx={{
-              mr: 2,
-              width: 180,
-              height: "auto",
-              marginLeft: "50px",
-            }}
-          />
+          <Link href="/">
+            <Box
+              component="img"
+              src="/img/logo.png"
+              alt="Eventgenda Logo"
+              sx={{
+                mr: 2,
+                width: 180,
+                height: "auto",
+                marginLeft: "50px",
+              }}
+            />
+          </Link>
 
           <Box
             sx={{
