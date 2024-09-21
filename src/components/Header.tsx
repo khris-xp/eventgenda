@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import Swal from "sweetalert2";
 
-const pages = ["Events", "Funding", "Hackathons", "Blogs"];
+const pages = ["Events", "Funding", "Hackathons", "Blogs", "Rewards"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
