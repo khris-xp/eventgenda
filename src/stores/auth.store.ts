@@ -1,25 +1,27 @@
 import { UserInit } from "@/constants/user.constant";
-import { UserProfileType } from "@/types/auth-response.type";
+import { UserProfileType } from "@/types/user.type";
 import Cookies from "js-cookie";
-import { create } from "zustand";
+import create from "zustand";
 
-const cookies = Cookies;
-
-interface AuthStore {
-  auth?: UserProfileType | null;
-  setAuth: (auth?: UserProfileType | null) => void;
-  actions: {
+interface AuthStoreInterface {
+  authenticated: boolean;
+  setAuthentication: (val: boolean) => void;
+  user: UserProfileType;
+  setUser: (user: UserProfileType) => void;
+  action: {
     logout: () => void;
   };
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  auth: UserInit,
-  setAuth: (auth) => set({ auth }),
-  actions: {
+export const useAuthStore = create<AuthStoreInterface>((set) => ({
+  authenticated: false,
+  user: UserInit,
+  setAuthentication: (val) => set((state) => ({ authenticated: val })),
+  setUser: (user) => set({ user }),
+  action: {
     logout: () => {
-      cookies.remove("token");
-      set({ auth: null });
+      Cookies.remove("token");
+      set({ authenticated: false, user: UserInit });
     },
   },
 }));

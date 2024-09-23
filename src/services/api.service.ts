@@ -14,7 +14,6 @@ export const axiosInstance: AxiosInstance = axios.create({
 
 const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   const token = Cookies.get("token");
-  console.log("token", token);
   if (token) {
     config.headers = config.headers || {};
     config.headers["Authorization"] = `Bearer ${token}`;

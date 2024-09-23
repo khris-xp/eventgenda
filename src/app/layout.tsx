@@ -1,6 +1,8 @@
 import Header from "@/components/Header";
+import AuthLayout from "@/layouts/auth-layout";
 import TanstackProvider from "@/providers/tanstack.provider";
 import theme from "@/utils/theme";
+import { Box } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -23,8 +25,16 @@ export default function RootLayout({
       <ThemeProvider theme={theme}>
         <TanstackProvider>
           <body className={inter.className}>
-            <Header />
-            {children}
+            <AuthLayout>
+              <Box
+                sx={{
+                  marginBottom: "75px",
+                }}
+              >
+                <Header />
+              </Box>
+              {children}
+            </AuthLayout>
           </body>
         </TanstackProvider>
       </ThemeProvider>
