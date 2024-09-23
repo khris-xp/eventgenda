@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/auth.store";
 import { UserProfileType } from "@/types/user.type";
 import Cookies from "js-cookie";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 
 export default function AuthLayout({
   children,
@@ -13,17 +13,19 @@ export default function AuthLayout({
 }) {
   const token = Cookies.get("token");
 
-  const setAuthentication = useAuthStore((state) => state.setAuthentication);
-  const setUser = useAuthStore((state) => state.setUser);
+  const setAuthentication = useAuthStore(
+    useCallback((state) => state.setAuthentication, []),
+  );
+  const setUser = useAuthStore(useCallback((state) => state.setUser, []));
+
   const { userProfileQuery } = useAuth();
 
   useEffect(() => {
-    console.log(token);
-    if (token && userProfileQuery) {
+    if (token && userProfileQuery && userProfileQuery.data) {
       setAuthentication(true);
-      setUser(userProfileQuery.data?.data as UserProfileType);
+      setUser(userProfileQuery.data.data as UserProfileType);
     }
-  }, [token]);
+  }, [token, setAuthentication, setUser, userProfileQuery?.data]);
 
   return <div className="w-full h-screen">{children}</div>;
 }

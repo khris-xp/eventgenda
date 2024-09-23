@@ -3,6 +3,7 @@
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import EmojiEventsSharpIcon from "@mui/icons-material/EmojiEventsSharp";
 import FindInPageRoundedIcon from "@mui/icons-material/FindInPageRounded";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PeopleSharpIcon from "@mui/icons-material/PeopleSharp";
 import SubjectIcon from "@mui/icons-material/Subject";
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
@@ -74,6 +75,11 @@ export default function EventDetailPage() {
             <Tab
               icon={<PeopleSharpIcon />}
               label="PARTICIPANTS"
+              iconPosition="start"
+            />
+            <Tab
+              icon={<LocalOfferIcon />}
+              label="Categories"
               iconPosition="start"
             />
           </Tabs>
