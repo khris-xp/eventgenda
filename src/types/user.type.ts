@@ -1,3 +1,15 @@
+import { BaseResponseType } from "@/common/responses/response.type";
+
+export type AuthResponseType = BaseResponseType & {
+  data: UserProfileType;
+};
+
+export type LoginResponseType = BaseResponseType & {
+  data: {
+    accessToken: string;
+  };
+};
+
 export type UserProfileType = {
   _id: string;
   email: string;
