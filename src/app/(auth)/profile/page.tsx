@@ -129,14 +129,7 @@ export default function ProfilePage() {
               className="font-medium"
               sx={{ color: "#1b1042" }}
             >
-              {userProfile?.data.fullName.split(" ").map((part, index) => (
-                <React.Fragment key={index}>
-                  {part}
-                  {index < userProfile?.data.fullName.split(" ").length - 1 && (
-                    <br />
-                  )}
-                </React.Fragment>
-              ))}
+              {userProfile?.data.fullName}
               <a
                 href="/edit-profile"
                 style={{

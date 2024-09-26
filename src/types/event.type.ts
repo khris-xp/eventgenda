@@ -21,7 +21,7 @@ export type EventRuleType = {
   requiresIdVerification: boolean;
 };
 
-export type LocationType = {
+export type LocationModelType = {
   name: string;
   address: string;
   city: string;
@@ -50,7 +50,7 @@ export type EventType = {
   projects: ProjectType[];
   prizes: number[];
   thumbnail: string;
-  location: LocationType;
+  location: LocationModelType;
   createdAt: Date;
   updatedAt: Date;
 };

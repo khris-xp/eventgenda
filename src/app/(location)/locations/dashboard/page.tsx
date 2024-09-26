@@ -20,10 +20,10 @@ export default function LocationDashboardPage() {
         <TableCell>{location.location}</TableCell>
         <TableCell>{location.prices}</TableCell>
         <TableCell>
-          {new Date(location.createdDate).toLocaleDateString()}
+          {new Date(location.createdAt).toLocaleDateString()}
         </TableCell>
         <TableCell>
-          {new Date(location.updatedDate).toLocaleDateString()}
+          {new Date(location.updatedAt).toLocaleDateString()}
         </TableCell>
       </TableRow>
     );
