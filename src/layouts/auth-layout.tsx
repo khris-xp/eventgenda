@@ -23,7 +23,7 @@ export default function AuthLayout({
       setAuthentication(true);
       setUser(userProfileQuery.data?.data as UserProfileType);
     }
-  }, [token]);
+  }, [token, setAuthentication, setUser, userProfileQuery]);
 
   return <div className="w-full h-screen">{children}</div>;
 }
