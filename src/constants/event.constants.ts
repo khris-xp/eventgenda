@@ -2,6 +2,7 @@ import { EventType } from "@/types/event.type";
 
 export const Events: EventType[] = [
   {
+    _id: "1",
     title: "Tech Innovation Conference 2024",
     description:
       "A conference focusing on the latest trends in tech innovation.",
@@ -11,9 +12,19 @@ export const Events: EventType[] = [
       description: "Events related to technology and innovation.",
     },
     createdBy: {
-      name: "John Doe",
+      fullName: "John Doe",
       email: "john.doe@example.com",
-      role: "admin",
+      _id: "",
+      userName: "",
+      age: 0,
+      coin: 0,
+      reward: 0,
+      role: [],
+      profileImage: "",
+      history: [],
+      createdAt: "",
+      updatedAt: "",
+      __v: 0,
     },
     eventStartDate: new Date("2024-10-12T09:00:00Z"),
     eventEndDate: new Date("2024-10-14T18:00:00Z"),
@@ -66,6 +77,7 @@ export const Events: EventType[] = [
     updatedAt: new Date(),
   },
   {
+    _id: "1",
     title: "Green Energy Summit",
     description:
       "A summit focusing on renewable and green energy technologies.",
@@ -75,9 +87,19 @@ export const Events: EventType[] = [
       description: "Events related to sustainability and the environment.",
     },
     createdBy: {
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      role: "admin",
+      fullName: "John Doe",
+      email: "john.doe@example.com",
+      _id: "",
+      userName: "",
+      age: 0,
+      coin: 0,
+      reward: 0,
+      role: [],
+      profileImage: "",
+      history: [],
+      createdAt: "",
+      updatedAt: "",
+      __v: 0,
     },
     eventStartDate: new Date("2024-11-05T08:00:00Z"),
     eventEndDate: new Date("2024-11-07T17:00:00Z"),

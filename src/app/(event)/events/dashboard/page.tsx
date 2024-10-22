@@ -24,7 +24,7 @@ export default function EventDashboardPage() {
         <TableCell>{event.title}</TableCell>
         <TableCell>{event.description}</TableCell>
         <TableCell>{event.category.name}</TableCell>
-        <TableCell>{event.createdBy.name}</TableCell>
+        <TableCell>{event.createdBy.fullName}</TableCell>
         <TableCell>
           {new Date(event.eventStartDate).toLocaleDateString()}
         </TableCell>

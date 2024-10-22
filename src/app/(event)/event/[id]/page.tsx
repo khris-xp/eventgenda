@@ -1,5 +1,7 @@
 "use client";
 
+import { useEvent } from "@/hooks/useEvent";
+import { formatDate } from "@/utils/day";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import EmojiEventsSharpIcon from "@mui/icons-material/EmojiEventsSharp";
 import FindInPageRoundedIcon from "@mui/icons-material/FindInPageRounded";
@@ -7,20 +9,24 @@ import PeopleSharpIcon from "@mui/icons-material/PeopleSharp";
 import SubjectIcon from "@mui/icons-material/Subject";
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { Fragment, useState } from "react";
 
 export default function EventDetailPage() {
   const [value, setValue] = useState<number>(0);
+  const { id } = useParams();
+  const { event } = useEvent(id as string);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
   return (
     <Fragment>
       <Box sx={{ position: "relative", width: "100%" }}>
         <Box
           component="img"
-          src="https://taikai.network/static/images/default-cover.svg"
+          src={event?.thumbnail as string}
           sx={{
             objectFit: "cover",
             height: { xs: "150px", md: "250px" },
@@ -36,7 +42,7 @@ export default function EventDetailPage() {
           }}
         >
           <Image
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK_mAcrV3vVhLq6HK4c1liqGV59qhOwXdEGw&s"
+            src={event?.thumbnail as string}
             alt="avatar"
             width={96}
             height={96}
@@ -86,11 +92,10 @@ export default function EventDetailPage() {
             variant="h4"
             sx={{ color: "#1b1042", fontWeight: "bold" }}
           >
-            CASSINI Hackathons Environment and Green Transition
+            {event?.title}
           </Typography>
           <Typography sx={{ color: "gray", mt: 1 }}>
-            Create innovative solutions for the environment & green transition
-            with EU space technologies.
+            {event?.description}
           </Typography>
           <Box sx={{ width: "100%", mt: 3 }}>
             <hr className="border-t-2" />
@@ -100,22 +105,26 @@ export default function EventDetailPage() {
               Timeline
             </Typography>
             <Typography sx={{ fontSize: "16px", fontWeight: "300", mt: 1 }}>
-              Hackathon Weekend starts 13 Sep, 2024 - 23:00
+              Registered: {formatDate(event?.registrationStartDate)} -
+              {formatDate(event?.registrationEndDate)}
             </Typography>
             <Typography sx={{ fontSize: "16px", fontWeight: "300", mt: 1 }}>
-              The Final Sprint 15 Sep, 2024 - 15:00
+              Event Date: {formatDate(event?.eventStartDate)} -{" "}
+              {formatDate(event?.eventEndDate)}
             </Typography>
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
             <PeopleSharpIcon sx={{ color: "#4b5563" }} />
-            <Typography sx={{ fontWeight: "bold", ml: 1 }}>871</Typography>
+            <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+              {event?.participants.length}
+            </Typography>
             <Typography sx={{ ml: 1 }}>Participants</Typography>
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", mt: 3 }}>
             <Image
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK_mAcrV3vVhLq6HK4c1liqGV59qhOwXdEGw&s"
+              src={event?.createdBy.profileImage as string}
               alt="avatar"
               width={48}
               height={48}
@@ -123,10 +132,10 @@ export default function EventDetailPage() {
             />
             <Box sx={{ ml: 2 }}>
               <Typography sx={{ fontWeight: "bold", fontSize: "14px" }}>
-                CASSINI Hackathons & Mentoring
+                {event?.createdBy.fullName}
               </Typography>
               <Typography sx={{ fontSize: "12px", color: "gray" }}>
-                Brussels, Belgium
+                @{event?.createdBy.userName}
               </Typography>
             </Box>
           </Box>
@@ -137,12 +146,9 @@ export default function EventDetailPage() {
             <Typography
               sx={{ fontWeight: "600", fontSize: { xs: "20px", md: "26px" } }}
             >
-              7th CASSINI Hackathon: Environment & Green Transition
+              {event?.title}
             </Typography>
-            <Typography sx={{ color: "gray" }}>
-              Dive into some of the critical challenges faced by millions of
-              people...
-            </Typography>
+            <Typography sx={{ color: "gray" }}>{event?.description}</Typography>
           </Box>
 
           <Box className="flex flex-col gap-7 mb-12">

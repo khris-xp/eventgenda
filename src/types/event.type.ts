@@ -1,3 +1,6 @@
+import { BaseResponseType } from "@/common/responses/response.type";
+import { UserProfileType } from "./user.type";
+
 export type UserType = {
   name: string;
   email: string;
@@ -34,11 +37,12 @@ export type ProjectType = {
 };
 
 export type EventType = {
+  _id: string;
   title: string;
   description: string;
   limit: number;
   category: CategoryType;
-  createdBy: UserType;
+  createdBy: UserProfileType;
   eventStartDate: Date;
   eventEndDate: Date;
   registrationStartDate: Date;
@@ -53,4 +57,12 @@ export type EventType = {
   location: LocationModelType;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type EventResponseType = BaseResponseType & {
+  data: EventType;
+};
+
+export type EventsResponseType = BaseResponseType & {
+  data: EventType[];
 };
