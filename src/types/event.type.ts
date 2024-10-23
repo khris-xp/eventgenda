@@ -46,7 +46,7 @@ export type EventType = {
   registrationEndDate: Date;
   participants: UserType[];
   sponsor: SponsorType;
-  eventRule: EventRuleType[];
+  rules: EventRuleType[];
   donate: UserType[];
   projects: ProjectType[];
   prizes: number[];
@@ -56,6 +56,7 @@ export type EventType = {
   updatedAt: Date;
   amountRaised: number;
   amountRequired: number;
+  status: string;
 };
 
 export type EventResponseType = BaseResponseType & {

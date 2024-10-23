@@ -15,6 +15,7 @@ export const useEventRule = (eventRuleId?: string) => {
       return await eventRuleService.getEventRules();
     },
     {
+      refetchOnWindowFocus: false,
       onSuccess: (data) => {
         setEventRules(data.data);
       },
@@ -23,14 +24,15 @@ export const useEventRule = (eventRuleId?: string) => {
 
   const eventRuleQuery = useQuery(
     ["eventRule", eventRuleId],
-    async ({ queryKey }) => {
-      const [, id] = queryKey;
-      return await eventRuleService.getEventRule(id as string);
+    async () => {
+      if (!eventRuleId) {
+        return null;
+      }
+      return await eventRuleService.getEventRule(eventRuleId);
     },
     {
-      onSuccess: (data) => {
-        setEventRule(data.data);
-      },
+      refetchOnWindowFocus: false,
+      enabled: !!eventRuleId,
     },
   );
 

@@ -8,7 +8,7 @@ type Props = {
 
 export default function LocationCard({ location }: Props) {
   return (
-    <div className="rounded overflow-hidden flex flex-col max-w-2xl mx-auto border">
+    <div className="rounded overflow-hidden flex flex-col border">
       <div className="sm:flex justify-between items-center pt-4 px-5">
         <Link
           href="#"
@@ -18,10 +18,10 @@ export default function LocationCard({ location }: Props) {
         </Link>
       </div>
 
-      <div className="relative">
+      <div className="relative h-1/2">
         <Link href="#">
           <Image
-            className="w-full"
+            className="w-full h-1/2"
             src={location.thumbnail}
             alt="location"
             width={1500}
