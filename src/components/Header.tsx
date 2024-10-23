@@ -22,7 +22,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 
-const pages = ["Events", "Funding", "Hackathons", "Blogs", "Rewards"];
+const pages = ["Events", "Funding-Event", "Hackathons", "Blogs", "Rewards"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
