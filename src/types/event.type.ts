@@ -44,7 +44,7 @@ export type EventType = {
   eventEndDate: Date;
   registrationStartDate: Date;
   registrationEndDate: Date;
-  participants: UserType[];
+  participants: UserProfileType[];
   sponsor: SponsorType;
   rules: EventRuleType[];
   donate: UserType[];

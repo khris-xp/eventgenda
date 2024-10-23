@@ -12,6 +12,12 @@ export const eventService = {
   createEvent: async (event: CreateEventDto): Promise<EventResponseType> => {
     return await apiController("/api/event", "post", event);
   },
+  joinEvent: async (id: string): Promise<EventResponseType> => {
+    return await apiController(`/api/event/${id}/join`, "post");
+  },
+  exitEvent: async (id: string): Promise<EventResponseType> => {
+    return await apiController(`/api/event/${id}/exit`, "post");
+  },
   updateEvent: async (
     id: string,
     event: UpdateEventDto,
