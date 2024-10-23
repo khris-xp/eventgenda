@@ -1,4 +1,5 @@
 import { EventType } from "@/types/event.type";
+import { calculateDateLeft } from "@/utils/day";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,7 +26,7 @@ export default function EventCard({ event }: Props) {
             <div className="absolute -bottom-5 left-3">
               <Image
                 className="w-14 h-14 rounded-full"
-                src={event.createdBy?.profileImage}
+                src={event.createdBy?.organization?.profileImage as string}
                 alt="avatar"
                 width={1000}
                 height={1000}
@@ -33,7 +34,11 @@ export default function EventCard({ event }: Props) {
             </div>
             <div className="absolute top-0 left-1">
               <div className=" bg-indigo-800 text-white text-sm p-2 px-5 m-2 rounded-lg border border-gray-700 shadow">
-                {event?.location?.name ? event.location.name : "Online"}
+                {calculateDateLeft(
+                  event.registrationStartDate,
+                  event.registrationEndDate,
+                )}{" "}
+                Days Left
               </div>
             </div>
           </div>
@@ -51,8 +56,9 @@ export default function EventCard({ event }: Props) {
           </Typography>
         </div>
         <div className="flex space-x-4 px-5">
-          <CategoryChip category="Environment" />
-          <CategoryChip category="Green Transition" />
+          {event.categories.map((category) => (
+            <CategoryChip key={category._id} category={category.name} />
+          ))}
         </div>
         <Box
           sx={{
@@ -64,15 +70,19 @@ export default function EventCard({ event }: Props) {
             backgroundColor: "white",
           }}
         >
-          <ProgressBar />
+          <ProgressBar
+            width={(event.amountRaised / event.amountRequired) * 100}
+          />
           <Typography variant="body2" className="text-gray-600 pl-2 uppercase">
-            7 days left
+            {(event.amountRaised / event.amountRequired) * 100} %
           </Typography>
         </Box>
         <div className="flex flex-col p-5 border-t border-indigo-300">
           <p className="font-normal text-black text-xl">Prize</p>
           <div className="flex items-center text-soft-blue space-x-2 whitespace-nowrap">
-            <p className="font-normal text-black text-xl">100 $</p>
+            <p className="font-normal text-black text-xl">
+              {event.prizes[0]} $
+            </p>
           </div>
         </div>
       </div>

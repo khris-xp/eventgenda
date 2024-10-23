@@ -1,5 +1,7 @@
 "use client";
 
+import LocationCard from "@/components/Card/LocationCard";
+import EventRuleContainer from "@/components/Containers/EventRuleContainer";
 import { useEvent } from "@/hooks/useEvent";
 import { formatDate } from "@/utils/day";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
@@ -42,7 +44,7 @@ export default function EventDetailPage() {
           }}
         >
           <Image
-            src={event?.thumbnail as string}
+            src={event?.createdBy.organization?.profileImage as string}
             alt="avatar"
             width={96}
             height={96}
@@ -135,7 +137,7 @@ export default function EventDetailPage() {
                 {event?.createdBy.fullName}
               </Typography>
               <Typography sx={{ fontSize: "12px", color: "gray" }}>
-                @{event?.createdBy.userName}
+                By {event?.createdBy.organization?.name}
               </Typography>
             </Box>
           </Box>
@@ -153,25 +155,24 @@ export default function EventDetailPage() {
 
           <Box className="flex flex-col gap-7 mb-12">
             <Typography
-              sx={{ fontWeight: "600", fontSize: { xs: "20px", md: "23px" } }}
+              sx={{ fontWeight: "600", fontSize: { xs: "20px", md: "26px" } }}
             >
-              1. REGISTER
+              Location
             </Typography>
-            <Typography sx={{ color: "gray" }}>
-              Hit the orange button ⚡ LOG IN TO JOIN or ⚡ JOIN HACKATHON...
-            </Typography>
+            {event?.location && <LocationCard location={event.location} />}
           </Box>
 
-          <Box className="flex flex-col gap-7 mb-12">
+          {event?.eventRule ? (
+            event?.eventRule.map((rule, index) => (
+              <EventRuleContainer key={index} eventRule={rule} index={index} />
+            ))
+          ) : (
             <Typography
-              sx={{ fontWeight: "600", fontSize: { xs: "20px", md: "23px" } }}
+              sx={{ color: "gray", textAlign: "center", fontSize: "32px" }}
             >
-              2. PRIZES
+              No rules found for this event
             </Typography>
-            <Typography sx={{ color: "gray" }}>
-              You are in luck! At the CASSINI Hackathons...
-            </Typography>
-          </Box>
+          )}
         </Grid>
       </Grid>
     </Fragment>

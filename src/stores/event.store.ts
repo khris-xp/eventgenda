@@ -18,9 +18,11 @@ export const useEventStore = create<EventStore>((set, get) => ({
     const { selectedType, selectedCategory } = get();
     return events.filter((event) => {
       const typeMatch =
-        selectedType === "All" || event.category.name === selectedType;
+        selectedType === "All" ||
+        event.categories.map((c) => c.name).includes(selectedType);
       const categoryMatch =
-        selectedCategory === "All" || event.category.name === selectedCategory;
+        selectedCategory === "All" ||
+        event.categories.map((c) => c.name).includes(selectedCategory);
       return typeMatch && categoryMatch;
     });
   },
