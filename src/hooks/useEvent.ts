@@ -48,6 +48,26 @@ export const useEvent = (eventId?: string | string[]) => {
     },
   );
 
+  const joinEventMutation = useMutation(
+    (id: string) => eventService.joinEvent(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("events");
+        queryClient.invalidateQueries(["event", eventId]);
+      },
+    },
+  );
+
+  const exitEventMutation = useMutation(
+    (id: string) => eventService.exitEvent(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("events");
+        queryClient.invalidateQueries(["event", eventId]);
+      },
+    },
+  );
+
   const deleteEventMutation = useMutation(
     (id: string) => eventService.deleteEvent(id),
     {
@@ -71,5 +91,7 @@ export const useEvent = (eventId?: string | string[]) => {
     createEventMutation,
     updateEventMutation,
     deleteEventMutation,
+    joinEventMutation,
+    exitEventMutation,
   };
 };
