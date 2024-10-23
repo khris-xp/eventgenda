@@ -9,6 +9,17 @@ export function formatDate(date: Date | undefined): string {
   });
 }
 
+export const formatDateForInput = (dateString: string): string => {
+  if (!dateString) return "";
+  try {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0];
+  } catch (error) {
+    console.error("Invalid date:", dateString);
+    return "";
+  }
+};
+
 export function calculateDateLeft(startDate: Date, endDate: Date): number {
   const start = new Date(startDate);
   const end = new Date(endDate);

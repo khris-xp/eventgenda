@@ -6,7 +6,7 @@ export const UserInit = {
   age: 0,
   coin: 0,
   reward: 0,
-  role: [],
+  role: "",
   profileImage: "",
   history: [],
   createdAt: "",

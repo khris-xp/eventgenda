@@ -190,28 +190,30 @@ export default function EventDetailPage() {
                   Add Event Rule
                 </Button>
               )}
-
-              {event?.participants?.some(
-                (participant) => participant._id === userProfile?.data._id,
-              ) ? (
-                <Button
-                  variant="outlined"
-                  startIcon={<LogoutIcon />}
-                  sx={{ mt: 3 }}
-                  onClick={handleLeaveEvent}
-                >
-                  Leave Event
-                </Button>
-              ) : (
-                <Button
-                  variant="outlined"
-                  startIcon={<AddCircleIcon />}
-                  sx={{ mt: 3 }}
-                  onClick={handleJoinEvent}
-                >
-                  Join Event
-                </Button>
-              )}
+              {userProfile?.data &&
+                userProfile?.data.role !== "organizer" &&
+                userProfile?.data.role !== "admin" &&
+                (event?.participants?.some(
+                  (participant) => participant._id === userProfile?.data._id,
+                ) ? (
+                  <Button
+                    variant="outlined"
+                    startIcon={<LogoutIcon />}
+                    sx={{ mt: 3 }}
+                    onClick={handleLeaveEvent}
+                  >
+                    Leave Event
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    startIcon={<AddCircleIcon />}
+                    sx={{ mt: 3 }}
+                    onClick={handleJoinEvent}
+                  >
+                    Join Event
+                  </Button>
+                ))}
             </Grid>
 
             <Grid item xs={12} md={9}>

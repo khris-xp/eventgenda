@@ -1,6 +1,7 @@
 "use client";
 import { ProfileAvatarURLs } from "@/enums/profile.enum";
 import { useAuth } from "@/hooks/useAuth";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import HistoryIcon from "@mui/icons-material/History";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
@@ -8,6 +9,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import StarsIcon from "@mui/icons-material/Stars";
 import SubjectIcon from "@mui/icons-material/Subject";
 import { Box, Grid, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -187,6 +189,16 @@ export default function ProfilePage() {
                 <span> Rewards</span>
               </div>
             </div>
+
+            <Link href="/create/event">
+              <Button
+                variant="outlined"
+                startIcon={<AddCircleIcon />}
+                sx={{ mt: 3 }}
+              >
+                Create Event
+              </Button>
+            </Link>
           </Grid>
           <Grid item xs={6}>
             <Box className="flex flex-col gap-7 mb-12">
