@@ -1,36 +1,66 @@
 "use client";
 
-import LocationCard from "@/components/Card/LocationCard";
-import EventRuleContainer from "@/components/Containers/EventRuleContainer";
-import { useAuth } from "@/hooks/useAuth";
+import { UpdateEventDto } from "@/common/dto/event.dto";
 import { useEvent } from "@/hooks/useEvent";
+import { useEventRule } from "@/hooks/useEventRule";
 import { formatDate } from "@/utils/day";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EmojiEventsSharpIcon from "@mui/icons-material/EmojiEventsSharp";
 import FindInPageRoundedIcon from "@mui/icons-material/FindInPageRounded";
 import PeopleSharpIcon from "@mui/icons-material/PeopleSharp";
+import SaveAsRoundedIcon from "@mui/icons-material/SaveAltRounded";
 import SubjectIcon from "@mui/icons-material/Subject";
-import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Grid, Tab, Tabs, TextField, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
 
-export default function EventDetailPage() {
-  const { userProfile } = useAuth();
+export default function CreateEventRulePage() {
+  const [eventRuleName, setEventRuleName] = useState<string>("");
+  const [eventRuleDescription, setEventRuleDescription] = useState<string>("");
   const [value, setValue] = useState<number>(0);
   const { id } = useParams();
-  const { event } = useEvent(id as string);
+  const { event, updateEventMutation } = useEvent(id as string);
+  const { createEventRuleMutation } = useEventRule();
   const router = useRouter();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const redirect = (path: string) => {
-    router.push(path);
+  const handleCreateEventRule = async () => {
+    try {
+      const response = await createEventRuleMutation.mutateAsync({
+        name: eventRuleName,
+        description: eventRuleDescription,
+      });
+      if (event) {
+        const updateEventDto: UpdateEventDto = {
+          title: event.title,
+          description: event.description,
+          limit: event.limit,
+          categories: event.categories.map((category) => category._id),
+          eventStartDate: event.eventStartDate.toLocaleString(),
+          eventEndDate: event.eventEndDate.toLocaleString(),
+          registrationStartDate: event.registrationStartDate.toLocaleString(),
+          registrationEndDate: event.registrationEndDate.toLocaleString(),
+          prizes: event.prizes,
+          thumbnail: event.thumbnail,
+          location: event.location._id,
+          amountRequired: event.amountRequired,
+          rules: [...event.rules.map((rule) => rule._id), response.data._id],
+          status: event.status,
+        };
+        await updateEventMutation.mutateAsync({
+          id: event._id,
+          event: updateEventDto,
+        });
+        router.push(`/event/${event._id}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -151,17 +181,6 @@ export default function EventDetailPage() {
               </Typography>
             </Box>
           </Box>
-
-          {userProfile?.data._id === event?.createdBy._id && (
-            <Button
-              variant="outlined"
-              startIcon={<AddCircleIcon />}
-              sx={{ mt: 3 }}
-              onClick={() => redirect(`/event-rule/create/${id}`)}
-            >
-              Add Event Rule
-            </Button>
-          )}
         </Grid>
 
         <Grid item xs={12} md={9}>
@@ -169,36 +188,33 @@ export default function EventDetailPage() {
             <Typography
               sx={{ fontWeight: "600", fontSize: { xs: "20px", md: "26px" } }}
             >
-              {event?.title}
+              Add Event Rule
             </Typography>
-            <Typography sx={{ color: "gray" }}>{event?.description}</Typography>
-          </Box>
+            <TextField
+              fullWidth
+              label="Event Rule Name"
+              className="mt-6 mb-2 mx-2"
+              onChange={(e) => setEventRuleName(e.target.value)}
+              value={eventRuleName}
+            />
+            <TextField
+              fullWidth
+              label="Event Rule Description"
+              className="mt-6 mb-2 mx-2"
+              onChange={(e) => setEventRuleDescription(e.target.value)}
+              value={eventRuleDescription}
+            />
 
-          <Box className="flex flex-col gap-7 mb-12">
-            <Typography
-              sx={{ fontWeight: "600", fontSize: { xs: "20px", md: "26px" } }}
-            >
-              Location
-            </Typography>
-            {event?.location && <LocationCard location={event.location} />}
+            <div className="flex justify-end mt-2 my-5">
+              <Button
+                variant="outlined"
+                startIcon={<SaveAsRoundedIcon />}
+                onClick={handleCreateEventRule}
+              >
+                Create Event Rule
+              </Button>
+            </div>
           </Box>
-
-          {event?.rules ? (
-            event?.rules.map((rule, index) => (
-              <EventRuleContainer
-                key={index}
-                event={event}
-                eventRule={rule}
-                index={index}
-              />
-            ))
-          ) : (
-            <Typography
-              sx={{ color: "gray", textAlign: "center", fontSize: "32px" }}
-            >
-              No rules found for this event
-            </Typography>
-          )}
         </Grid>
       </Grid>
     </Fragment>
