@@ -13,18 +13,26 @@ export const useEvent = (eventId?: string | string[]) => {
     async () => await eventService.getEvents(),
     {
       staleTime: 1000 * 60 * 5,
+      refetchOnWindowFocus: false,
     },
   );
   const eventQuery = useQuery<{ data: EventType } | null, Error>(
     ["event", eventId],
     async () => {
+      console.log("Event ID: ", eventId);
       if (!eventId) {
         return null;
       }
       return await eventService.getEvent(eventId as string);
     },
     {
+      refetchOnWindowFocus: false,
       enabled: !!eventId,
+      onSuccess: (data) => {
+        if (data) {
+          queryClient.setQueryData(["event", eventId], data);
+        }
+      },
     },
   );
 
@@ -68,6 +76,26 @@ export const useEvent = (eventId?: string | string[]) => {
     },
   );
 
+  const approveEventMutation = useMutation(
+    (id: string) => eventService.approveEvent(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("events");
+        queryClient.invalidateQueries(["event", eventId]);
+      },
+    },
+  );
+
+  const rejectEventMutation = useMutation(
+    (id: string) => eventService.rejectEvent(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("events");
+        queryClient.invalidateQueries(["event", eventId]);
+      },
+    },
+  );
+
   const deleteEventMutation = useMutation(
     (id: string) => eventService.deleteEvent(id),
     {
@@ -93,5 +121,7 @@ export const useEvent = (eventId?: string | string[]) => {
     deleteEventMutation,
     joinEventMutation,
     exitEventMutation,
+    approveEventMutation,
+    rejectEventMutation,
   };
 };

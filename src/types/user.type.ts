@@ -19,7 +19,7 @@ export type UserProfileType = {
   age: number;
   coin: number;
   reward: number;
-  role: string[];
+  role: string;
   profileImage: string;
   history: any[];
   organization?: OrganizationType;

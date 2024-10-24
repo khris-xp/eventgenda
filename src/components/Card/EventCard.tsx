@@ -55,10 +55,12 @@ export default function EventCard({ event }: Props) {
             {event.description}
           </Typography>
         </div>
-        <div className="flex space-x-4 px-5">
-          {event.categories.map((category) => (
-            <CategoryChip key={category._id} category={category.name} />
-          ))}
+        <div className="w-full px-4">
+          <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
+            {event.categories.map((category) => (
+              <CategoryChip key={category._id} category={category.name} />
+            ))}
+          </div>
         </div>
         <Box
           sx={{

@@ -18,6 +18,12 @@ export const eventService = {
   exitEvent: async (id: string): Promise<EventResponseType> => {
     return await apiController(`/api/event/${id}/exit`, "post");
   },
+  approveEvent: async (id: string): Promise<EventResponseType> => {
+    return await apiController(`/api/event/${id}/approve`, "put");
+  },
+  rejectEvent: async (id: string): Promise<EventResponseType> => {
+    return await apiController(`/api/event/${id}/reject`, "put");
+  },
   updateEvent: async (
     id: string,
     event: UpdateEventDto,

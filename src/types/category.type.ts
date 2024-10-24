@@ -1,6 +1,6 @@
 import { BaseResponseType } from "@/common/responses/response.type";
 
-export type CreategoryType = {
+export type CategoryType = {
   _id: string;
   name: string;
   description: string;
@@ -9,9 +9,9 @@ export type CreategoryType = {
 };
 
 export type CategoryResponseType = BaseResponseType & {
-  data: CreategoryType;
+  data: CategoryType;
 };
 
 export type CategoriesResponseType = BaseResponseType & {
-  data: CreategoryType[];
+  data: CategoryType[];
 };

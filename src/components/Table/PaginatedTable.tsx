@@ -49,7 +49,7 @@ export default function PaginatedTable({
         <TableHead>
           <TableRow>
             {headers.map((header, index) => (
-              <TableCell key={index} align="left">
+              <TableCell key={index} align="center">
                 {header}
               </TableCell>
             ))}

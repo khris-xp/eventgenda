@@ -15,6 +15,7 @@ export const useCategory = (categoryId?: string) => {
       return await categoryService.getCategories();
     },
     {
+      refetchOnWindowFocus: false,
       onSuccess: (data) => {
         setCategories(data.data);
       },
@@ -23,13 +24,20 @@ export const useCategory = (categoryId?: string) => {
 
   const categoryQuery = useQuery(
     ["category", categoryId],
-    async ({ queryKey }) => {
-      const [, id] = queryKey;
-      return await categoryService.getCategory(id as string);
+    async () => {
+      if (!categoryId) {
+        return null;
+      }
+
+      return await categoryService.getCategory(categoryId);
     },
     {
+      refetchOnWindowFocus: false,
+      enabled: !!categoryId,
       onSuccess: (data) => {
-        setCategory(data.data);
+        if (data) {
+          setCategory(data.data);
+        }
       },
     },
   );

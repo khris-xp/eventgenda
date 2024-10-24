@@ -15,6 +15,7 @@ export const useLocation = (locationId?: string) => {
       return await locationService.getLocations();
     },
     {
+      refetchOnWindowFocus: false,
       onSuccess: (data) => {
         setLocations(data.data);
       },
@@ -25,11 +26,16 @@ export const useLocation = (locationId?: string) => {
     ["location", locationId],
     async ({ queryKey }) => {
       const [, id] = queryKey;
-      return await locationService.getLocation(id as string);
+      if (!id) {
+        return null;
+      }
+      return await locationService.getLocation(id);
     },
     {
       onSuccess: (data) => {
-        setLocation(data.data);
+        if (data) {
+          setLocation(data.data);
+        }
       },
     },
   );
