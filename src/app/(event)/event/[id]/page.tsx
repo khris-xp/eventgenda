@@ -2,6 +2,7 @@
 
 import LocationCard from "@/components/Card/LocationCard";
 import ParticipantCard from "@/components/Card/ParticipantCard";
+import PrizeCard from "@/components/Card/PrizeCard";
 import EventRuleContainer from "@/components/Containers/EventRuleContainer";
 import LoadingOverlay from "@/components/Loading/LoadingOverlay";
 import { useAuth } from "@/hooks/useAuth";
@@ -259,6 +260,29 @@ export default function EventDetailPage() {
                   No rules found for this event
                 </Typography>
               )}
+
+              <Box className="flex gap-7 mb-12">
+                <Typography
+                  sx={{
+                    fontWeight: "600",
+                    fontSize: { xs: "20px", md: "26px" },
+                  }}
+                >
+                  Prizes
+                </Typography>
+                <div className="w-full px-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {event.prizes &&
+                      event.prizes.map((prize, index) => (
+                        <PrizeCard
+                          key={index}
+                          prize={prize}
+                          index={String(index + 1)}
+                        />
+                      ))}
+                  </div>
+                </div>
+              </Box>
 
               <Box className="flex flex-col gap-7 mb-12">
                 <Typography
