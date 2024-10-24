@@ -23,7 +23,7 @@ import { useEffect } from "react";
 import Swal from "sweetalert2";
 
 const pages = ["Events", "Funding-Event", "Hackathons", "Blogs", "Rewards"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Add Coin", "Dashboard", "Logout"];
 
 function Header() {
   const { userProfile, logout: authLogout } = useAuth();
@@ -84,6 +84,9 @@ function Header() {
     } else if (setting === "Profile") {
       handleCloseUserMenu();
       router.push("/profile");
+    } else if (setting === "Add Coin") {
+      handleCloseUserMenu();
+      router.push("/payment");
     } else {
       handleCloseUserMenu();
     }
