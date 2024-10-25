@@ -1,11 +1,11 @@
 "use client";
 
 import { BlogType } from "@/types/blog.type";
+import { formatDateForInput } from "@/utils/day";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShareIcon from "@mui/icons-material/Share";
-import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,9 +13,9 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Collapse from "@mui/material/Collapse";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import Image from "next/image";
 import * as React from "react";
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -57,17 +57,20 @@ export default function BlogCard(blog: BlogType) {
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
+          <Image
+            src={blog.author.profileImage}
+            alt={blog.author.fullName}
+            width={90}
+            height={96}
+          />
         }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
-        title={blog.author}
-        subheader={blog.createdAt}
+        title={blog.author.fullName}
+        subheader={formatDateForInput(blog.createdAt)}
       />
       <CardMedia
         component="img"
