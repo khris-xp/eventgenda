@@ -10,6 +10,7 @@ import { useEvent } from "@/hooks/useEvent";
 import { formatDate } from "@/utils/day";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
 import EmojiEventsSharpIcon from "@mui/icons-material/EmojiEventsSharp";
 import FindInPageRoundedIcon from "@mui/icons-material/FindInPageRounded";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -18,6 +19,7 @@ import SubjectIcon from "@mui/icons-material/Subject";
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
 
@@ -215,8 +217,31 @@ export default function EventDetailPage() {
                     Join Event
                   </Button>
                 ))}
-            </Grid>
 
+              {userProfile?.data &&
+                userProfile?.data.role !== "organizer" &&
+                userProfile?.data.role !== "admin" && (
+                  <Link href={`/funding-event/${id}`}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<AttachMoneyRoundedIcon />}
+                      sx={{
+                        color: "#4629a7",
+                        borderColor: "#4629a7",
+                        "&:hover": {
+                          backgroundColor: "#4629a7",
+                          color: "white",
+                          border: "1px solid #4629a7",
+                        },
+                        width: "100%",
+                        mt: 3,
+                      }}
+                    >
+                      Funding
+                    </Button>
+                  </Link>
+                )}
+            </Grid>
             <Grid item xs={12} md={9}>
               <Box className="flex flex-col gap-7 mb-12">
                 <Typography

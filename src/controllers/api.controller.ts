@@ -1,4 +1,5 @@
 import { CreateBlogDto, UpdateBlogDto } from "@/common/dto/blog.dto";
+import { FundingEventDto } from "@/common/dto/event.dto";
 import {
   CreateLocationDto,
   UpdateLocationDto,
@@ -27,7 +28,8 @@ export async function apiController<T>(
     | CreateOrganizationDto
     | UpdateOrganizationDto
     | FormData
-    | DestroyImageDto,
+    | DestroyImageDto
+    | FundingEventDto,
 ): Promise<T> {
   try {
     const response = await axiosInstance.request({ url, method, data });

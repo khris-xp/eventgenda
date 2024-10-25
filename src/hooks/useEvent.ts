@@ -1,4 +1,8 @@
-import { CreateEventDto, UpdateEventDto } from "@/common/dto/event.dto";
+import {
+  CreateEventDto,
+  FundingEventDto,
+  UpdateEventDto,
+} from "@/common/dto/event.dto";
 import { eventService } from "@/services/event.service";
 import { useEventStore } from "@/stores/event.store";
 import { EventType } from "@/types/event.type";
@@ -96,6 +100,38 @@ export const useEvent = (eventId?: string | string[]) => {
     },
   );
 
+  const fundingEventMutation = useMutation(
+    ({
+      id,
+      fundingEventDto,
+    }: {
+      fundingEventDto: FundingEventDto;
+      id: string;
+    }) => eventService.fundingEvent(id, fundingEventDto),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("events");
+        queryClient.invalidateQueries(["event", eventId]);
+      },
+    },
+  );
+
+  const donateEventMutation = useMutation(
+    ({
+      id,
+      fundingEventDto,
+    }: {
+      fundingEventDto: FundingEventDto;
+      id: string;
+    }) => eventService.donateEvent(id, fundingEventDto),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("events");
+        queryClient.invalidateQueries(["event", eventId]);
+      },
+    },
+  );
+
   const deleteEventMutation = useMutation(
     (id: string) => eventService.deleteEvent(id),
     {
@@ -123,5 +159,7 @@ export const useEvent = (eventId?: string | string[]) => {
     exitEventMutation,
     approveEventMutation,
     rejectEventMutation,
+    fundingEventMutation,
+    donateEventMutation,
   };
 };

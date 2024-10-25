@@ -34,11 +34,7 @@ export default function EventCard({ event }: Props) {
             </div>
             <div className="absolute top-0 left-1">
               <div className=" bg-indigo-800 text-white text-sm p-2 px-5 m-2 rounded-lg border border-gray-700 shadow">
-                {calculateDateLeft(
-                  event.registrationStartDate,
-                  event.registrationEndDate,
-                )}{" "}
-                Days Left
+                {calculateDateLeft(event.registrationStartDate)} Days Left
               </div>
             </div>
           </div>
@@ -73,10 +69,14 @@ export default function EventCard({ event }: Props) {
           }}
         >
           <ProgressBar
-            width={(event.amountRaised / event.amountRequired) * 100}
+            width={
+              (event.amountRaised / event.amountRequired) * 100 > 100
+                ? 100
+                : (event.amountRaised / event.amountRequired) * 100
+            }
           />
           <Typography variant="body2" className="text-gray-600 pl-2 uppercase">
-            {(event.amountRaised / event.amountRequired) * 100} %
+            {Math.round((event.amountRaised / event.amountRequired) * 100)} %
           </Typography>
         </Box>
         <div className="flex flex-col p-5 border-t border-indigo-300">

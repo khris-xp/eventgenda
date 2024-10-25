@@ -31,3 +31,7 @@ export type UpdateEventDto = {
   rules: string[];
   status: string;
 };
+
+export type FundingEventDto = {
+  amount: number;
+};

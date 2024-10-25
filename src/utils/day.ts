@@ -20,8 +20,8 @@ export const formatDateForInput = (dateString: string): string => {
   }
 };
 
-export function calculateDateLeft(startDate: Date, endDate: Date): number {
-  const start = new Date(startDate);
+export function calculateDateLeft(endDate: Date): number {
+  const start = new Date();
   const end = new Date(endDate);
   const diff = end.getTime() - start.getTime();
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
