@@ -2,6 +2,7 @@ import { BaseResponseType } from "@/common/responses/response.type";
 import { EventRuleType } from "./event-rule.type";
 import { LocationType } from "./location.type";
 import { UserProfileType } from "./user.type";
+import { SponsorType } from "./sponsor.type";
 
 export type UserType = {
   name: string;
@@ -13,12 +14,6 @@ export type CategoryType = {
   _id: string;
   name: string;
   description: string;
-};
-
-export type SponsorType = {
-  name: string;
-  logo: string;
-  website: string;
 };
 
 export type LocationModelType = {
@@ -45,7 +40,7 @@ export type EventType = {
   registrationStartDate: Date;
   registrationEndDate: Date;
   participants: UserProfileType[];
-  sponsor: SponsorType;
+  sponsors: SponsorType[];
   rules: EventRuleType[];
   donate: UserType[];
   projects: ProjectType[];

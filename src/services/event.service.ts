@@ -1,4 +1,8 @@
-import { CreateEventDto, UpdateEventDto } from "@/common/dto/event.dto";
+import {
+  CreateEventDto,
+  FundingEventDto,
+  UpdateEventDto,
+} from "@/common/dto/event.dto";
 import { apiController } from "@/controllers/api.controller";
 import { EventResponseType, EventsResponseType } from "@/types/event.type";
 
@@ -23,6 +27,26 @@ export const eventService = {
   },
   rejectEvent: async (id: string): Promise<EventResponseType> => {
     return await apiController(`/api/event/${id}/reject`, "put");
+  },
+  fundingEvent: async (
+    id: string,
+    fundingEventDto: FundingEventDto,
+  ): Promise<EventResponseType> => {
+    return await apiController(
+      `/api/event/${id}/funding`,
+      "post",
+      fundingEventDto,
+    );
+  },
+  donateEvent: async (
+    id: string,
+    fundingEventDto: FundingEventDto,
+  ): Promise<EventResponseType> => {
+    return await apiController(
+      `/api/event/${id}/donate`,
+      "post",
+      fundingEventDto,
+    );
   },
   updateEvent: async (
     id: string,

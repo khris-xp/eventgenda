@@ -49,5 +49,6 @@ export const useAuth = () => {
     userProfile: userProfileQuery.data,
     userProfileLoading: userProfileQuery.isLoading,
     logout: action.logout,
+    refetch: userProfileQuery.refetch,
   };
 };

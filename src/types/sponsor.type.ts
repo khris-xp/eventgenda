@@ -1,9 +1,11 @@
 import { BaseResponseType } from "@/common/responses/response.type";
+import { UserProfileType } from "./user.type";
+import { EventType } from "./event.type";
 
 export type SponsorType = {
   _id: string;
-  user: string;
-  event: string;
+  user: UserProfileType;
+  event: EventType;
   amount: number;
   type: string;
   createdAt: string;
