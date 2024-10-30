@@ -1,6 +1,7 @@
 import { BaseResponseType } from "@/common/responses/response.type";
 import { HistoryType } from "./history.type";
 import { OrganizationType } from "./organization.type";
+import { RewardType } from "./reward.type";
 
 export type AuthResponseType = BaseResponseType & {
   data: UserProfileType;
@@ -19,12 +20,13 @@ export type UserProfileType = {
   userName: string;
   age: number;
   coin: number;
-  reward: number;
   role: string;
   profileImage: string;
   history: HistoryType[];
+  redeemedRewards: RewardType[];
   organization?: OrganizationType;
   createdAt: string;
   updatedAt: string;
+  rewardPoints: number;
   __v: number;
 };

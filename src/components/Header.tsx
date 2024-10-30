@@ -31,7 +31,7 @@ const ADMIN_MENU_ITEMS = [
 ] as const;
 const USER_ONLY_MENU_ITEMS = ["Profile", "Add Coin", "Logout"] as const;
 const DASHBOARD_MENU_ITEMS = [
-  "Organization",
+  "Reward",
   "Event Manager",
   "Analytics",
   "Settings",
@@ -39,7 +39,7 @@ const DASHBOARD_MENU_ITEMS = [
 
 type UserMenuAction = (typeof USER_MENU_ITEMS)[number];
 type DashboardMenuAction =
-  | "Organization"
+  | "Reward"
   | "Event Manager"
   | "Analytics"
   | "Settings";
@@ -62,7 +62,7 @@ const UserMenuContent = ({ userProfile }: { userProfile: any }) => (
       />
       <UserMenuRow
         icon={<Stars />}
-        text={`${userProfile?.data.reward} Rewards`}
+        text={`${userProfile?.data.rewardPoints} Rewards`}
       />
       <hr className="my-3" />
     </Box>
@@ -129,7 +129,7 @@ export default function Header() {
 
   const handleDashboardAction = (action: DashboardMenuAction) => {
     const actions: Record<DashboardMenuAction, () => void> = {
-      Organization: () => router.push("/dashboard/organization"),
+      Reward: () => router.push("/rewards/dashboard"),
       "Event Manager": () => router.push("/events/dashboard"),
       Analytics: () => router.push("/dashboard/analytics"),
       Settings: () => router.push("/dashboard/settings"),

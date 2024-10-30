@@ -220,7 +220,7 @@ export default function ProfilePage() {
               <StarsIcon className="m-1" />
               <div className="p-1">
                 <span className="font-semibold">
-                  {userProfile?.data.reward}
+                  {userProfile?.data.rewardPoints}
                 </span>
                 <span> Rewards</span>
               </div>
@@ -271,78 +271,126 @@ export default function ProfilePage() {
                 </TableBody>
               </Table>
             </TableContainer>
+
             <Typography
               variant="h4"
               className="font-medium my-10"
               sx={{ color: "#1b1042" }}
             >
-              Created Event
+              Reward
             </Typography>
             <TableContainer
               component={Paper}
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-              }}
+              style={{ width: "100%", textAlign: "center" }}
             >
-              <Table>
+              <Table style={{ width: "100%" }}>
                 <TableHead>
                   <TableRow>
                     <TableCell>
-                      <strong>Event</strong>
+                      <strong>Reward</strong>
                     </TableCell>
                     <TableCell>
                       <strong>Description</strong>
                     </TableCell>
                     <TableCell>
-                      <strong>Status</strong>
+                      <strong>Content</strong>
                     </TableCell>
                     <TableCell>
-                      <strong>Created Date</strong>
-                    </TableCell>
-                    <TableCell>
-                      <strong>Action</strong>
+                      <strong>Purchase Date</strong>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {eventUser?.map((row, index) => (
+                  {userProfile?.data.redeemedRewards.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell>{row.title}</TableCell>
+                      <TableCell>{row.name}</TableCell>
                       <TableCell>{row.description}</TableCell>
-                      <TableCell>{row.status}</TableCell>
+                      <TableCell>{row.description}</TableCell>
                       <TableCell>
                         {formatDate(new Date(row.createdAt))}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex justify-center space-x-3">
-                          <Link href={`/edit/event/${row._id}`}>
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              startIcon={<EditIcon />}
-                            >
-                              Edit
-                            </Button>
-                          </Link>
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            startIcon={<CloseIcon />}
-                            onClick={() => handleCancelEvent(row._id)}
-                          >
-                            Cancel
-                          </Button>
-                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
+
+            {userProfile?.data.role === "organizer" && (
+              <>
+                <Typography
+                  variant="h4"
+                  className="font-medium my-10"
+                  sx={{ color: "#1b1042" }}
+                >
+                  Created Event
+                </Typography>
+                <TableContainer
+                  component={Paper}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>
+                          <strong>Event</strong>
+                        </TableCell>
+                        <TableCell>
+                          <strong>Description</strong>
+                        </TableCell>
+                        <TableCell>
+                          <strong>Status</strong>
+                        </TableCell>
+                        <TableCell>
+                          <strong>Created Date</strong>
+                        </TableCell>
+                        <TableCell>
+                          <strong>Action</strong>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {eventUser?.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{row.title}</TableCell>
+                          <TableCell>{row.description}</TableCell>
+                          <TableCell>{row.status}</TableCell>
+                          <TableCell>
+                            {formatDate(new Date(row.createdAt))}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex justify-center space-x-3">
+                              <Link href={`/edit/event/${row._id}`}>
+                                <Button
+                                  variant="outlined"
+                                  color="primary"
+                                  startIcon={<EditIcon />}
+                                >
+                                  Edit
+                                </Button>
+                              </Link>
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                startIcon={<CloseIcon />}
+                                onClick={() => handleCancelEvent(row._id)}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </>
+            )}
           </Grid>
         </Grid>
 

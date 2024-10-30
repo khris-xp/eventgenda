@@ -4,10 +4,12 @@ export type RewardType = {
   _id: string;
   name: string;
   description: string;
+  content: string;
+  category: string;
   price: number;
   image: string;
-  createdDate: string;
-  updatedDate: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type RewardResponseType = BaseResponseType & {

@@ -14,6 +14,9 @@ export const rewardService = {
   ): Promise<RewardResponseType> => {
     return await apiController("/api/reward", "post", reward);
   },
+  addRewardToUser: async (id: string): Promise<RewardResponseType> => {
+    return await apiController(`/api/reward/${id}/add`, "post");
+  },
   updateReward: async (
     id: string,
     reward: UpdateRewardDto,

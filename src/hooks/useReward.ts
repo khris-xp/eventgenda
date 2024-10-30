@@ -12,6 +12,8 @@ export const useReward = (rewardId?: string) => {
       return await rewardService.getRewards();
     },
     {
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5,
       onSuccess: (data) => {
         setRewards(data.data);
       },
@@ -49,6 +51,17 @@ export const useReward = (rewardId?: string) => {
     },
   );
 
+  const addRewardToUserMutation = useMutation(
+    async (id: string) => {
+      return await rewardService.addRewardToUser(id);
+    },
+    {
+      onSuccess: (data) => {
+        rewardsQuery.refetch();
+      },
+    },
+  );
+
   const updateRewardMutation = useMutation(
     async ({ reward, id }: { reward: UpdateRewardDto; id: string }) => {
       return await rewardService.updateReward(id, reward);
@@ -77,5 +90,6 @@ export const useReward = (rewardId?: string) => {
     createRewardMutation,
     updateRewardMutation,
     deleteRewardMutation,
+    addRewardToUserMutation,
   };
 };

@@ -19,7 +19,9 @@ export default function RewardCard(props: Props) {
           height={500}
         />
         <div className="px-4 py-3 w-72">
-          <span className="text-gray-400 mr-3 uppercase text-xs">Brand</span>
+          <span className="text-gray-400 mr-3 uppercase text-xs">
+            {props.reward.category}
+          </span>
           <p className="text-lg font-bold text-black truncate block capitalize">
             {props.reward.name}
           </p>
