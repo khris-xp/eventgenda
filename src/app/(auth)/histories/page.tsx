@@ -1,52 +1,28 @@
 "use client";
 import { ProfileAvatarURLs } from "@/enums/profile.enum";
 import { useAuth } from "@/hooks/useAuth";
+import { formatDate } from "@/utils/day";
 import EditIcon from "@mui/icons-material/Edit";
 import HistoryIcon from "@mui/icons-material/History";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PersonIcon from "@mui/icons-material/Person";
 import StarsIcon from "@mui/icons-material/Stars";
 import SubjectIcon from "@mui/icons-material/Subject";
-import { Box, Grid, Typography } from "@mui/material";
-import { usePathname } from "next/navigation";
-import React from "react";
 import {
+  Box,
+  Grid,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  Typography,
 } from "@mui/material";
 import Link from "next/link";
-
-const mockData = [
-  {
-    event: "Login",
-    user: "John Doe",
-    createdDate: new Date("2024-01-01").toLocaleDateString(),
-    updatedDate: new Date("2024-01-02").toLocaleDateString(),
-  },
-  {
-    event: "File Upload",
-    user: "Jane Smith",
-    createdDate: new Date("2024-02-10").toLocaleDateString(),
-    updatedDate: new Date("2024-02-11").toLocaleDateString(),
-  },
-  {
-    event: "Profile Update",
-    user: "Alice Johnson",
-    createdDate: new Date("2024-03-15").toLocaleDateString(),
-    updatedDate: new Date("2024-03-16").toLocaleDateString(),
-  },
-  {
-    event: "Password Reset",
-    user: "Bob Lee",
-    createdDate: new Date("2024-04-20").toLocaleDateString(),
-    updatedDate: new Date("2024-04-21").toLocaleDateString(),
-  },
-];
+import { usePathname } from "next/navigation";
+import React from "react";
 
 export default function ProfilePage() {
   const { userProfile } = useAuth();
@@ -180,7 +156,7 @@ export default function ProfilePage() {
                   )}
                 </React.Fragment>
               ))}
-              <a
+              <Link
                 href="/edit-profile"
                 style={{
                   display: "inline-flex",
@@ -203,7 +179,7 @@ export default function ProfilePage() {
                   style={{ fontSize: "16px" }}
                   className="text-gray-400"
                 />
-              </a>
+              </Link>
             </Typography>
 
             <Box className="flex flex-col gap-1">
@@ -239,11 +215,14 @@ export default function ProfilePage() {
             </div>
           </Grid>
           <Grid item xs={9}>
-            <TableContainer
-              component={Paper}
-              className="ml-4 "
-              style={{ width: "100%" }}
+            <Typography
+              variant="h4"
+              className="font-medium mb-10"
+              sx={{ color: "#1b1042" }}
             >
+              History
+            </Typography>
+            <TableContainer component={Paper} style={{ width: "100%" }}>
               <Table style={{ width: "100%" }}>
                 <TableHead>
                   <TableRow>
@@ -251,7 +230,7 @@ export default function ProfilePage() {
                       <strong>Event</strong>
                     </TableCell>
                     <TableCell>
-                      <strong>User</strong>
+                      <strong>Description</strong>
                     </TableCell>
                     <TableCell>
                       <strong>Created Date</strong>
@@ -262,12 +241,16 @@ export default function ProfilePage() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {mockData.map((row, index) => (
+                  {userProfile?.data.history.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell>{row.event}</TableCell>
-                      <TableCell>{row.user}</TableCell>
-                      <TableCell>{row.createdDate}</TableCell>
-                      <TableCell>{row.updatedDate}</TableCell>
+                      <TableCell>{row.event.title}</TableCell>
+                      <TableCell>{row.event.description}</TableCell>
+                      <TableCell>
+                        {formatDate(new Date(row.createdAt))}
+                      </TableCell>
+                      <TableCell>
+                        {formatDate(new Date(row.updatedAt))}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
