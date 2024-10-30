@@ -1,13 +1,14 @@
 "use client";
 
 import PaginatedTable from "@/components/Table/PaginatedTable";
+import StatusTableCell from "@/components/Table/StatusTableCell";
 import { useEvent } from "@/hooks/useEvent";
 import { EventType } from "@/types/event.type";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
 import { Box, TableCell, TableRow } from "@mui/material";
 import Button from "@mui/material/Button";
-import EditIcon from "@mui/icons-material/Edit";
 
 export default function EventDashboardPage() {
   const { events, approveEventMutation, rejectEventMutation } = useEvent();
@@ -54,7 +55,9 @@ export default function EventDashboardPage() {
           {event.categories.map((category) => category.name)}
         </TableCell>
         <TableCell>{event.createdBy.fullName}</TableCell>
-        <TableCell>{event.status}</TableCell>
+        <TableCell>
+          <StatusTableCell status={event.status} />
+        </TableCell>
         <TableCell>
           {new Date(event.eventStartDate).toLocaleDateString()}
         </TableCell>
