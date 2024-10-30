@@ -13,6 +13,9 @@ export const eventService = {
   getEvent: async (id: string): Promise<EventResponseType> => {
     return await apiController(`/api/event/${id}`, "get");
   },
+  getEventByUser: async (): Promise<EventsResponseType> => {
+    return await apiController("/api/event/user", "get");
+  },
   createEvent: async (event: CreateEventDto): Promise<EventResponseType> => {
     return await apiController("/api/event", "post", event);
   },
@@ -27,6 +30,9 @@ export const eventService = {
   },
   rejectEvent: async (id: string): Promise<EventResponseType> => {
     return await apiController(`/api/event/${id}/reject`, "put");
+  },
+  cancelEvent: async (id: string): Promise<EventResponseType> => {
+    return await apiController(`/api/event/${id}/cancel`, "post");
   },
   fundingEvent: async (
     id: string,
