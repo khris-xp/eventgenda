@@ -1,4 +1,4 @@
-import { RewardType } from "@/constants/reward.constant";
+import { RewardType } from "@/types/reward.type";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,9 +10,9 @@ type Props = {
 export default function RewardCard(props: Props) {
   return (
     <div className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
-      <Link href={`/reward/${props.index}`}>
+      <Link href={`/reward/${props.reward._id}`}>
         <Image
-          src="https://images.unsplash.com/photo-1646753522408-077ef9839300?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8NjZ8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+          src={props.reward.image}
           alt="Reward"
           className="h-80 w-72 object-cover rounded-t-xl"
           width={500}
@@ -25,11 +25,11 @@ export default function RewardCard(props: Props) {
           </p>
           <div className="flex items-center">
             <p className="text-lg font-semibold text-black cursor-auto my-3">
-              $100
+              {props.reward.price} ฿
             </p>
             <del>
               <p className="text-sm text-gray-600 cursor-auto ml-2">
-                ${props.reward.price}
+                {props.reward.price * 2} ฿
               </p>
             </del>
             <div className="ml-auto">

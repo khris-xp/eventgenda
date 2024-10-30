@@ -1,4 +1,4 @@
-import { RewardType } from "@/constants/reward.constant";
+import { RewardType } from "@/types/reward.type";
 import { create } from "zustand";
 
 interface RewardStore {

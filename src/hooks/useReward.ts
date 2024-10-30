@@ -21,12 +21,19 @@ export const useReward = (rewardId?: string) => {
   const rewardQuery = useQuery(
     ["reward", rewardId],
     async ({ queryKey }) => {
+      if (!rewardId) {
+        return null;
+      }
       const [, id] = queryKey;
       return await rewardService.getReward(id as string);
     },
     {
+      refetchOnWindowFocus: false,
+      enabled: !!rewardId,
       onSuccess: (data) => {
-        setReward(data.data);
+        if (data) {
+          setReward(data.data);
+        }
       },
     },
   );
@@ -65,8 +72,8 @@ export const useReward = (rewardId?: string) => {
   );
 
   return {
-    rewardsQuery,
-    rewardQuery,
+    rewards: rewardsQuery.data?.data,
+    reward: rewardQuery.data?.data,
     createRewardMutation,
     updateRewardMutation,
     deleteRewardMutation,
