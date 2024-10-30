@@ -25,7 +25,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { Fragment } from "react";
 
 export default function ProfilePage() {
   const { userProfile } = useAuth();
@@ -43,7 +43,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <>
+    <Fragment>
       <main className="ml-20 mr-20" style={{ color: "#1b1042" }}>
         <Box
           className="p-5"
@@ -234,7 +234,10 @@ export default function ProfilePage() {
             >
               History
             </Typography>
-            <TableContainer component={Paper} style={{ width: "100%" }}>
+            <TableContainer
+              component={Paper}
+              style={{ width: "100%", textAlign: "center" }}
+            >
               <Table style={{ width: "100%" }}>
                 <TableHead>
                   <TableRow>
@@ -275,8 +278,17 @@ export default function ProfilePage() {
             >
               Created Event
             </Typography>
-            <TableContainer component={Paper} style={{ width: "100%" }}>
-              <Table style={{ width: "100%" }}>
+            <TableContainer
+              component={Paper}
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Table>
                 <TableHead>
                   <TableRow>
                     <TableCell>
@@ -306,14 +318,25 @@ export default function ProfilePage() {
                         {formatDate(new Date(row.createdAt))}
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          startIcon={<CloseIcon />}
-                          onClick={() => handleCancelEvent(row._id)}
-                        >
-                          Cancel
-                        </Button>
+                        <div className="flex justify-center space-x-3">
+                          <Link href={`/edit/event/${row._id}`}>
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              startIcon={<EditIcon />}
+                            >
+                              Edit
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            startIcon={<CloseIcon />}
+                            onClick={() => handleCancelEvent(row._id)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -327,6 +350,6 @@ export default function ProfilePage() {
           <hr className="border-t-2 mt-5 mb-32" />
         </Box>
       </main>
-    </>
+    </Fragment>
   );
 }
