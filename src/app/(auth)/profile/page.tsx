@@ -184,7 +184,7 @@ export default function ProfilePage() {
               <StarsIcon className="m-1" />
               <div className="p-1">
                 <span className="font-semibold">
-                  {userProfile?.data.reward}
+                  {userProfile?.data.rewardPoints}
                 </span>
                 <span> Rewards</span>
               </div>

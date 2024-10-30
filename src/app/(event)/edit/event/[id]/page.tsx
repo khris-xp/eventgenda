@@ -30,7 +30,7 @@ const MenuProps = {
   },
 };
 
-export default function CreateEventPage() {
+export default function EditEventPage() {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [limit, setLimit] = useState<number>(0);

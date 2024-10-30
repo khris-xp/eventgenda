@@ -9,7 +9,9 @@ export const UserInit = {
   role: "",
   profileImage: "",
   history: [],
+  redeemedRewards: [],
   createdAt: "",
   updatedAt: "",
+  rewardPoints: 0,
   __v: 0,
 };

@@ -2,11 +2,22 @@
 
 import { useReward } from "@/hooks/useReward";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function RewardPageDetail() {
   const { id } = useParams();
-  const { reward } = useReward(id as string);
+  const router = useRouter();
+  const { reward, addRewardToUserMutation } = useReward(id as string);
+
+  const handleBuyReward = async () => {
+    try {
+      await addRewardToUserMutation.mutateAsync(id as string);
+      router.push("/histories");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="flex flex-col md:flex-row -mx-4">
@@ -26,8 +37,7 @@ export default function RewardPageDetail() {
             {reward?.name}
           </h2>
           <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed
-            ante justo. Integer euismod libero id mauris malesuada tincidunt.
+            {reward?.content}
           </p>
           <div className="flex mb-4">
             <div className="mr-4">
@@ -53,7 +63,10 @@ export default function RewardPageDetail() {
               {reward?.description}
             </p>
             <div className="flex justify-end mt-4">
-              <button className="w-1/2 bg-indigo-800 text-white py-2 px-4 rounded-full font-bold hover:bg-indigo-900">
+              <button
+                className="w-1/2 bg-indigo-800 text-white py-2 px-4 rounded-full font-bold hover:bg-indigo-900"
+                onClick={handleBuyReward}
+              >
                 Buy Reward
               </button>
             </div>
