@@ -1,4 +1,5 @@
 import { BaseResponseType } from "@/common/responses/response.type";
+import { HistoryType } from "./history.type";
 import { OrganizationType } from "./organization.type";
 
 export type AuthResponseType = BaseResponseType & {
@@ -21,7 +22,7 @@ export type UserProfileType = {
   reward: number;
   role: string;
   profileImage: string;
-  history: any[];
+  history: HistoryType[];
   organization?: OrganizationType;
   createdAt: string;
   updatedAt: string;

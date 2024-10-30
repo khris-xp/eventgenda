@@ -23,7 +23,6 @@ export const useEvent = (eventId?: string | string[]) => {
   const eventQuery = useQuery<{ data: EventType } | null, Error>(
     ["event", eventId],
     async () => {
-      console.log("Event ID: ", eventId);
       if (!eventId) {
         return null;
       }
