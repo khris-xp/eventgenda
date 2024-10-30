@@ -7,6 +7,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, TableCell, TableRow } from "@mui/material";
 import Button from "@mui/material/Button";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function EventDashboardPage() {
   const { events, approveEventMutation, rejectEventMutation } = useEvent();
