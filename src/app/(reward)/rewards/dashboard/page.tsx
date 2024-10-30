@@ -1,12 +1,14 @@
 "use client";
 
 import PaginatedTable from "@/components/Table/PaginatedTable";
-import { RewardConstant, RewardType } from "@/constants/reward.constant";
+import { useReward } from "@/hooks/useReward";
+import { RewardType } from "@/types/reward.type";
 import { TableCell, TableRow } from "@mui/material";
 import Image from "next/image";
 
 export default function RewardDashboardPage() {
   const rewardHeaders = ["", "Name", "Description", "Price"];
+  const { rewards } = useReward();
 
   const renderRewardRow = (reward: RewardType) => (
     <TableRow key={reward.name}>
@@ -27,11 +29,13 @@ export default function RewardDashboardPage() {
 
   return (
     <div className="flex justify-center container mx-auto py-5">
-      <PaginatedTable
-        headers={rewardHeaders}
-        rows={RewardConstant}
-        renderRow={renderRewardRow}
-      />
+      {rewards && (
+        <PaginatedTable
+          headers={rewardHeaders}
+          rows={rewards as RewardType[]}
+          renderRow={renderRewardRow}
+        />
+      )}
     </div>
   );
 }

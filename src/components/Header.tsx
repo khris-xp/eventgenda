@@ -23,8 +23,26 @@ import Swal from "sweetalert2";
 
 const NAVIGATION_ITEMS = ["Events", "Blogs", "Rewards"] as const;
 const USER_MENU_ITEMS = ["Profile", "Add Coin", "Dashboard", "Logout"] as const;
+const ADMIN_MENU_ITEMS = [
+  "Profile",
+  "Add Coin",
+  "Dashboard",
+  "Logout",
+] as const;
+const USER_ONLY_MENU_ITEMS = ["Profile", "Add Coin", "Logout"] as const;
+const DASHBOARD_MENU_ITEMS = [
+  "Organization",
+  "Event Manager",
+  "Analytics",
+  "Settings",
+] as const;
 
 type UserMenuAction = (typeof USER_MENU_ITEMS)[number];
+type DashboardMenuAction =
+  | "Organization"
+  | "Event Manager"
+  | "Analytics"
+  | "Settings";
 
 const UserMenuContent = ({ userProfile }: { userProfile: any }) => (
   <>
@@ -106,6 +124,21 @@ export default function Header() {
   const { action } = useAuthStore();
   const router = useRouter();
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [anchorElDashboard, setAnchorElDashboard] =
+    useState<null | HTMLElement>(null);
+
+  const handleDashboardAction = (action: DashboardMenuAction) => {
+    const actions: Record<DashboardMenuAction, () => void> = {
+      Organization: () => router.push("/dashboard/organization"),
+      "Event Manager": () => router.push("/events/dashboard"),
+      Analytics: () => router.push("/dashboard/analytics"),
+      Settings: () => router.push("/dashboard/settings"),
+    };
+
+    actions[action]();
+    setAnchorElDashboard(null);
+    setAnchorElUser(null);
+  };
 
   const handleLogout = async () => {
     const { isConfirmed } = await Swal.fire({
@@ -129,12 +162,14 @@ export default function Header() {
       Logout: handleLogout,
       Profile: () => router.push("/profile"),
       "Add Coin": () => router.push("/payment"),
-      Dashboard: () => setAnchorElUser(null),
+      Dashboard: () => setAnchorElDashboard(anchorElUser),
     };
 
     actions[action]();
     setAnchorElUser(null);
   };
+
+  const isAdmin = userProfile?.data.role === "admin";
 
   return (
     <AppBar
@@ -179,12 +214,42 @@ export default function Header() {
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
                 <UserMenuContent userProfile={userProfile} />
-                {USER_MENU_ITEMS.map((item) => (
-                  <MenuItem key={item} onClick={() => handleMenuAction(item)}>
-                    <Typography>{item}</Typography>
-                  </MenuItem>
-                ))}
+                {(isAdmin ? ADMIN_MENU_ITEMS : USER_ONLY_MENU_ITEMS).map(
+                  (item) => (
+                    <MenuItem
+                      key={item}
+                      onClick={() => handleMenuAction(item)}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>{item}</Typography>
+                      {item === "Dashboard" && "▸"}
+                    </MenuItem>
+                  ),
+                )}
               </Menu>
+              {isAdmin && (
+                <Menu
+                  sx={{ mt: "45px", ml: "-10px" }}
+                  anchorEl={anchorElDashboard}
+                  open={Boolean(anchorElDashboard)}
+                  onClose={() => setAnchorElDashboard(null)}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                >
+                  {DASHBOARD_MENU_ITEMS.map((item) => (
+                    <MenuItem
+                      key={item}
+                      onClick={() => handleDashboardAction(item)}
+                    >
+                      <Typography>{item}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              )}
             </Box>
           ) : (
             <Box sx={{ flexGrow: 0, marginRight: "60px" }}>
