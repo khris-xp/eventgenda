@@ -48,6 +48,24 @@ export const useEvent = (eventId?: string | string[]) => {
     },
   );
 
+  const eventUserQuery = useQuery<{ data: EventType[] }, Error>(
+    "event",
+    async () => await eventService.getEventByUser(),
+    {
+      staleTime: 1000 * 60 * 5,
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  const cancelEventMutation = useMutation(
+    (id: string) => eventService.cancelEvent(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("events");
+      },
+    },
+  );
+
   const updateEventMutation = useMutation(
     ({ event, id }: { event: UpdateEventDto; id: string }) =>
       eventService.updateEvent(id, event),
@@ -160,5 +178,7 @@ export const useEvent = (eventId?: string | string[]) => {
     rejectEventMutation,
     fundingEventMutation,
     donateEventMutation,
+    cancelEventMutation,
+    eventUser: eventUserQuery.data?.data,
   };
 };

@@ -1,7 +1,9 @@
 "use client";
 import { ProfileAvatarURLs } from "@/enums/profile.enum";
 import { useAuth } from "@/hooks/useAuth";
+import { useEvent } from "@/hooks/useEvent";
 import { formatDate } from "@/utils/day";
+import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import HistoryIcon from "@mui/icons-material/History";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
@@ -10,6 +12,7 @@ import StarsIcon from "@mui/icons-material/Stars";
 import SubjectIcon from "@mui/icons-material/Subject";
 import {
   Box,
+  Button,
   Grid,
   Paper,
   Table,
@@ -29,6 +32,15 @@ export default function ProfilePage() {
   const pathname = usePathname();
   const isOverviewPage = pathname === "/profile";
   const isHistoryPage = pathname === "/histories";
+  const { eventUser, cancelEventMutation } = useEvent();
+
+  const handleCancelEvent = async (id: string) => {
+    try {
+      await cancelEventMutation.mutateAsync(id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -250,6 +262,58 @@ export default function ProfilePage() {
                       </TableCell>
                       <TableCell>
                         {formatDate(new Date(row.updatedAt))}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Typography
+              variant="h4"
+              className="font-medium my-10"
+              sx={{ color: "#1b1042" }}
+            >
+              Created Event
+            </Typography>
+            <TableContainer component={Paper} style={{ width: "100%" }}>
+              <Table style={{ width: "100%" }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <strong>Event</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Description</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Status</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Created Date</strong>
+                    </TableCell>
+                    <TableCell>
+                      <strong>Action</strong>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {eventUser?.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.title}</TableCell>
+                      <TableCell>{row.description}</TableCell>
+                      <TableCell>{row.status}</TableCell>
+                      <TableCell>
+                        {formatDate(new Date(row.createdAt))}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          startIcon={<CloseIcon />}
+                          onClick={() => handleCancelEvent(row._id)}
+                        >
+                          Cancel
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
