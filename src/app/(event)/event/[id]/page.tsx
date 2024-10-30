@@ -22,6 +22,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
+import { formatUppercase } from "@/utils/text";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 export default function EventDetailPage() {
   const { userProfile } = useAuth();
@@ -163,6 +165,14 @@ export default function EventDetailPage() {
                   {event?.participants.length}
                 </Typography>
                 <Typography sx={{ ml: 1 }}>Participants</Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+                <EmojiEventsIcon sx={{ color: "#4b5563" }} />
+                <Typography sx={{ fontWeight: "bold", ml: 1 }}>
+                  {formatUppercase(event?.status)}
+                </Typography>
+                <Typography sx={{ ml: 1 }}>Status</Typography>
               </Box>
 
               <Box sx={{ display: "flex", alignItems: "center", mt: 3 }}>

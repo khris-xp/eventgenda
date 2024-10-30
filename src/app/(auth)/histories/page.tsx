@@ -1,4 +1,5 @@
 "use client";
+import StatusTableCell from "@/components/Table/StatusTableCell";
 import { ProfileAvatarURLs } from "@/enums/profile.enum";
 import { useAuth } from "@/hooks/useAuth";
 import { useEvent } from "@/hooks/useEvent";
@@ -305,7 +306,7 @@ export default function ProfilePage() {
                     <TableRow key={index}>
                       <TableCell>{row.name}</TableCell>
                       <TableCell>{row.description}</TableCell>
-                      <TableCell>{row.description}</TableCell>
+                      <TableCell>{row.content}</TableCell>
                       <TableCell>
                         {formatDate(new Date(row.createdAt))}
                       </TableCell>
@@ -359,7 +360,9 @@ export default function ProfilePage() {
                         <TableRow key={index}>
                           <TableCell>{row.title}</TableCell>
                           <TableCell>{row.description}</TableCell>
-                          <TableCell>{row.status}</TableCell>
+                          <TableCell>
+                            <StatusTableCell status={row.status} />
+                          </TableCell>
                           <TableCell>
                             {formatDate(new Date(row.createdAt))}
                           </TableCell>
