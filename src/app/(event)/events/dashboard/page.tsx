@@ -6,12 +6,17 @@ import { useEvent } from "@/hooks/useEvent";
 import { EventType } from "@/types/event.type";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, TableCell, TableRow } from "@mui/material";
 import Button from "@mui/material/Button";
 
 export default function EventDashboardPage() {
-  const { events, approveEventMutation, rejectEventMutation } = useEvent();
+  const {
+    events,
+    approveEventMutation,
+    rejectEventMutation,
+    deleteEventMutation,
+  } = useEvent();
   const eventHeaders = [
     "Title",
     "Description",
@@ -25,6 +30,14 @@ export default function EventDashboardPage() {
     "Participants",
     "Action",
   ];
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteEventMutation.mutateAsync(id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleApprove = async (id: string) => {
     try {
@@ -78,21 +91,33 @@ export default function EventDashboardPage() {
               gap: "5px",
             }}
           >
-            <Button
-              variant="outlined"
-              color="success"
-              startIcon={<CheckIcon />}
-              onClick={() => handleApprove(event._id)}
-            >
-              Approve
-            </Button>
+            {event.status === "pending" && (
+              <>
+                <Button
+                  variant="outlined"
+                  color="success"
+                  startIcon={<CheckIcon />}
+                  onClick={() => handleApprove(event._id)}
+                >
+                  Approve
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  startIcon={<CloseIcon />}
+                  onClick={() => handleReject(event._id)}
+                >
+                  Reject
+                </Button>
+              </>
+            )}
             <Button
               variant="outlined"
               color="error"
-              startIcon={<CloseIcon />}
-              onClick={() => handleReject(event._id)}
+              startIcon={<DeleteIcon />}
+              onClick={() => handleDelete(event._id)}
             >
-              Reject
+              Delete
             </Button>
           </Box>
         </TableCell>
