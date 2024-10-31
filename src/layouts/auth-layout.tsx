@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/auth.store";
 import { UserProfileType } from "@/types/user.type";
 import Cookies from "js-cookie";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 
 export default function AuthLayout({
   children,
@@ -13,14 +13,19 @@ export default function AuthLayout({
 }) {
   const token = Cookies.get("token");
 
-  const setAuthentication = useAuthStore((state) => state.setAuthentication);
-  const setUser = useAuthStore((state) => state.setUser);
+  const setAuthentication = useAuthStore(
+    useCallback((state) => state.setAuthentication, []),
+  );
+  const setUser = useAuthStore(useCallback((state) => state.setUser, []));
+
   const { userProfileQuery } = useAuth();
 
   useEffect(() => {
     if (token && userProfileQuery) {
       setAuthentication(true);
-      setUser(userProfileQuery.data?.data as UserProfileType);
+      if (userProfileQuery.data) {
+        setUser(userProfileQuery.data.data as UserProfileType);
+      }
     }
   }, [token, setAuthentication, setUser, userProfileQuery]);
 
