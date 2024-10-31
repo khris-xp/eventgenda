@@ -6,8 +6,7 @@ import axios, {
 } from 'axios';
 import Cookies from 'js-cookie';
 
-const baseURL: string =
-  process.env.API_URL || 'https://eventgenda-api-production.up.railway.app';
+const baseURL: string = process.env.API_URL || 'http://localhost:8081';
 
 export const axiosInstance: AxiosInstance = axios.create({
   baseURL,
