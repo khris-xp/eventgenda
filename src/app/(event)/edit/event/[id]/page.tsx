@@ -1,45 +1,208 @@
 "use client";
 
+import { useCategory } from "@/hooks/useCategory";
+import { useEvent } from "@/hooks/useEvent";
+import { useLocation } from "@/hooks/useLocation";
+import { uploadService } from "@/services/upload.service";
+import { CategoryType } from "@/types/category.type";
+import { formatDateForInput } from "@/utils/day";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import SaveAsRoundedIcon from "@mui/icons-material/SaveAsRounded";
 import { Button, IconButton, MenuItem, TextField } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
 import Image from "next/image";
-import { useState } from "react";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 export default function EditEventPage() {
+  const router = useRouter();
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [limit, setLimit] = useState<number>(0);
+  const [amountRequired, setAmountRequired] = useState<number>(0);
+  const [prizes, setPrizes] = useState<number[]>([]);
+  const [eventStartDate, setEventStartDate] = useState<string>("");
+  const [eventEndDate, setEventEndDate] = useState<string>("");
+  const [registrationStartDate, setRegistrationStartDate] =
+    useState<string>("");
+  const [registrationEndDate, setRegistrationEndDate] = useState<string>("");
+  const [thumbnail, setThumbnail] = useState<string>("");
+  const { id } = useParams();
+
+  const { categoriesQuery } = useCategory();
+  const { locationsQuery } = useLocation();
+  const { updateEventMutation, event } = useEvent(id as string);
   const [previewProfile, setPreviewProfile] = useState<string>("");
-  const categories = [
-    {
-      value: "Category 1",
-      label: "Category 1",
-    },
-    {
-      value: "Category 2",
-      label: "Category 2",
-    },
-    {
-      value: "Category 3",
-      label: "Category 3",
-    },
-    {
-      value: "Category 4",
-      label: "Category 4",
-    },
-  ];
-  const uploadImage = (
+
+  const handleEditEvent = async () => {
+    try {
+      await updateEventMutation.mutateAsync({
+        id: id as string,
+        event: {
+          title,
+          description,
+          limit,
+          categories: selectedCategories.ids,
+          eventStartDate,
+          eventEndDate,
+          registrationStartDate,
+          registrationEndDate,
+          prizes,
+          thumbnail,
+          location: selectedLocations.id,
+          amountRequired,
+          rules: [],
+          status: "pending",
+        },
+      });
+
+      router.push("/events");
+
+      await Swal.fire({
+        title: "Success",
+        text: "Event has been updated",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (event) {
+      setTitle(event.title);
+      setDescription(event.description);
+      setLimit(event.limit);
+      setAmountRequired(event.amountRequired);
+      setPrizes(event.prizes);
+      setEventStartDate(
+        formatDateForInput(event.eventStartDate.toLocaleString()),
+      );
+      setEventEndDate(formatDateForInput(event.eventEndDate.toLocaleString()));
+      setRegistrationStartDate(
+        formatDateForInput(event.registrationStartDate.toLocaleString()),
+      );
+      setRegistrationEndDate(
+        formatDateForInput(event.registrationEndDate.toLocaleString()),
+      );
+      setThumbnail(event.thumbnail);
+      setPreviewProfile(event.thumbnail);
+      setSelectedCategories({
+        ids: event.categories.map((cat) => cat._id),
+        names: event.categories.map((cat) => cat.name),
+      });
+      setSelectedLocations({
+        id: event.location._id,
+        name: event.location.name,
+      });
+    }
+  }, [event]);
+
+  const uploadImage = async (
     e: React.ChangeEvent<HTMLInputElement>,
     type: string,
   ) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
-      if (type === "picture-profile") {
-        const objectUrl = URL.createObjectURL(file);
-        setPreviewProfile(objectUrl);
+    try {
+      if (e.target.files) {
+        const file = e.target.files[0];
+        if (type === "picture-profile") {
+          const uploadFile = new FormData();
+          uploadFile.append("image", e.target.files[0]);
+
+          const response = await uploadService.uploadImage(uploadFile);
+          const objectUrl = URL.createObjectURL(file);
+          setPreviewProfile(objectUrl);
+          setThumbnail(response.data.url);
+        }
       }
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
+
+  interface CategorySelection {
+    ids: string[];
+    names: string[];
+  }
+
+  interface LocationSelection {
+    id: string;
+    name: string;
+  }
+
+  const [selectedCategories, setSelectedCategories] =
+    useState<CategorySelection>({
+      ids: [],
+      names: [],
+    });
+
+  const [selectedLocations, setSelectedLocations] = useState<LocationSelection>(
+    {
+      id: "",
+      name: "",
+    },
+  );
+
+  const handleCategoryChange = (event: any) => {
+    const selectedNames = event.target.value;
+    const selectedIds =
+      categoriesQuery.data?.data
+        .filter((cat) => selectedNames.includes(cat.name))
+        .map((cat) => cat._id) || [];
+
+    setSelectedCategories({
+      ids: selectedIds,
+      names: selectedNames,
+    });
+  };
+
+  const handleLocationChange = (event: any) => {
+    const selectedName = event.target.value;
+    const selectedId =
+      locationsQuery.data?.data.find((loc) => loc.name === selectedName)?._id ||
+      "";
+
+    setSelectedLocations({
+      id: selectedId,
+      name: selectedName,
+    });
+  };
+
   return (
     <div className="w-full p-12 h-screen">
       <div className="flex flex-row h-full drop-shadow-lg border rounded-xl">
@@ -50,8 +213,10 @@ export default function EditEventPage() {
                 src={previewProfile}
                 alt="Preview"
                 className="w-full h-full object-cover rounded-lg"
-                width={3000}
-                height={3060}
+                width={800}
+                height={600}
+                priority
+                quality={85}
               />
               <div className="absolute top-2 right-2">
                 <IconButton
@@ -98,11 +263,15 @@ export default function EditEventPage() {
               fullWidth
               label="Event Title"
               className="mt-6 mb-2 mx-2"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
             <TextField
               fullWidth
               label="Event Description"
               className="mt-6 mb-2 mx-2"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
             <TextField
               label="Participant Limit"
@@ -110,6 +279,17 @@ export default function EditEventPage() {
               fullWidth
               type="number"
               InputProps={{ inputProps: { min: 0 } }}
+              value={limit}
+              onChange={(e) => setLimit(Number(e.target.value))}
+            />
+            <TextField
+              label="Amount Funding Goal"
+              className="mt-6 mb-2 mx-2"
+              fullWidth
+              type="number"
+              InputProps={{ inputProps: { min: 0 } }}
+              value={amountRequired}
+              onChange={(e) => setAmountRequired(Number(e.target.value))}
             />
             <div className="flex gap-5 items-center">
               <div className="flex flex-col">
@@ -119,6 +299,10 @@ export default function EditEventPage() {
                   fullWidth
                   type="number"
                   InputProps={{ inputProps: { min: 0 } }}
+                  value={String(prizes[0])}
+                  onChange={(e) =>
+                    setPrizes([Number(e.target.value), prizes[1], prizes[2]])
+                  }
                 />
               </div>
               <div className="flex flex-col">
@@ -128,6 +312,10 @@ export default function EditEventPage() {
                   fullWidth
                   type="number"
                   InputProps={{ inputProps: { min: 0 } }}
+                  value={String(prizes[1])}
+                  onChange={(e) =>
+                    setPrizes([prizes[0], Number(e.target.value), prizes[2]])
+                  }
                 />
               </div>
               <div className="flex flex-col">
@@ -137,30 +325,67 @@ export default function EditEventPage() {
                   fullWidth
                   type="number"
                   InputProps={{ inputProps: { min: 0 } }}
+                  value={String(prizes[2])}
+                  onChange={(e) =>
+                    setPrizes([prizes[0], prizes[1], Number(e.target.value)])
+                  }
                 />
               </div>
             </div>
-            <TextField
-              id="outlined-select-category"
-              select
-              label="Select"
-              className="mt-6 mb-2 mx-2"
-              helperText="Please select your category"
-            >
-              {categories.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+            <FormControl className="mt-6 mb-2 mx-2">
+              <InputLabel id="demo-multiple-name-label">Category</InputLabel>
+              <Select
+                labelId="category-select-label"
+                id="category-select"
+                multiple
+                value={selectedCategories.names}
+                onChange={handleCategoryChange}
+                input={<OutlinedInput label="Category" />}
+                MenuProps={MenuProps}
+              >
+                {categoriesQuery.data?.data.map((category: CategoryType) => (
+                  <MenuItem key={category._id} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth className="mt-6 mb-2 mx-2">
+              <InputLabel id="location-select-label">
+                Select Location
+              </InputLabel>
+              <Select
+                labelId="location-select-label"
+                id="location-select"
+                value={selectedLocations.name}
+                onChange={handleLocationChange}
+                label="Select Location"
+              >
+                {locationsQuery.data?.data.map((location) => (
+                  <MenuItem key={location._id} value={location.name}>
+                    {location.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <div className="grid grid-cols-2 gap-5 mx-2">
               <div className="flex flex-col">
                 <label className="mt-6 mb-2 mx-2">Event Start Date</label>
-                <TextField fullWidth type="date" />
+                <TextField
+                  fullWidth
+                  type="date"
+                  value={eventStartDate}
+                  onChange={(e) => setEventStartDate(e.target.value)}
+                />
               </div>
               <div className="flex flex-col">
                 <label className="mt-6 mb-2 mx-2">Event End Date</label>
-                <TextField fullWidth type="date" />
+                <TextField
+                  fullWidth
+                  type="date"
+                  value={eventEndDate}
+                  onChange={(e) => setEventEndDate(e.target.value)}
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-5 mx-2">
@@ -168,17 +393,31 @@ export default function EditEventPage() {
                 <label className="mt-6 mb-2 mx-2">
                   Registration Start Date
                 </label>
-                <TextField fullWidth type="date" />
+                <TextField
+                  fullWidth
+                  type="date"
+                  value={registrationStartDate}
+                  onChange={(e) => setRegistrationStartDate(e.target.value)}
+                />
               </div>
               <div className="flex flex-col">
                 <label className="mt-6 mb-2 mx-2">Registration End Date</label>
-                <TextField fullWidth type="date" />
+                <TextField
+                  fullWidth
+                  type="date"
+                  value={registrationEndDate}
+                  onChange={(e) => setRegistrationEndDate(e.target.value)}
+                />
               </div>
             </div>
           </div>
           <div className="flex justify-center mt-2 my-5">
-            <Button variant="outlined" startIcon={<SaveAsRoundedIcon />}>
-              Edit EVent
+            <Button
+              variant="outlined"
+              startIcon={<SaveAsRoundedIcon />}
+              onClick={handleEditEvent}
+            >
+              Edit Event
             </Button>
           </div>
         </div>

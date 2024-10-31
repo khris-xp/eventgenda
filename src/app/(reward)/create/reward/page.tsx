@@ -1,27 +1,88 @@
 "use client";
 
+import { useReward } from "@/hooks/useReward";
+import { uploadService } from "@/services/upload.service";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import SaveAsRoundedIcon from "@mui/icons-material/SaveAsRounded";
 import { Button, IconButton, TextField } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function CreateRewardPage() {
+  const router = useRouter();
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [price, setPrice] = useState<number>(0);
+  const [image, setImage] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
   const [previewProfile, setPreviewProfile] = useState<string>("");
-  const uploadImage = (
+
+  const { createRewardMutation } = useReward();
+
+  const uploadImage = async (
     e: React.ChangeEvent<HTMLInputElement>,
     type: string,
   ) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
-      if (type === "picture-profile") {
-        const objectUrl = URL.createObjectURL(file);
-        setPreviewProfile(objectUrl);
+    try {
+      if (e.target.files) {
+        const file = e.target.files[0];
+        if (type === "picture-profile") {
+          const uploadFile = new FormData();
+          uploadFile.append("image", e.target.files[0]);
+          const response = await uploadService.uploadImage(uploadFile);
+          const objectUrl = URL.createObjectURL(file);
+          setPreviewProfile(objectUrl);
+          setImage(response.data.url);
+        }
       }
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
+
+  const handleCreateReward = async () => {
+    try {
+      createRewardMutation.mutate({
+        name,
+        description,
+        content,
+        price,
+        image,
+        category,
+      });
+      await Swal.fire({
+        title: "Success",
+        text: "Reward has been successfully created!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+      router.push("/rewards/dashboard");
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+    }
+  };
+
   return (
     <div className="w-full p-12 h-screen">
       <div className="flex flex-row h-full drop-shadow-lg border rounded-xl">
@@ -80,11 +141,25 @@ export default function CreateRewardPage() {
               fullWidth
               label="Reward Name"
               className="mt-6 mb-2 mx-2"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
             <TextField
               fullWidth
               label="Reward Description"
               className="mt-6 mb-2 mx-2"
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <TextField
+              fullWidth
+              label="Reward Content"
+              className="mt-6 mb-2 mx-2"
+              type="text"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
             />
             <TextField
               label="Reward Price"
@@ -92,10 +167,23 @@ export default function CreateRewardPage() {
               fullWidth
               type="number"
               InputProps={{ inputProps: { min: 0 } }}
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
             />
-
+            <TextField
+              label="Reward Category"
+              className="mt-6 mb-2 mx-2"
+              fullWidth
+              type="text"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            />
             <div className="flex justify-center mt-2 my-5">
-              <Button variant="outlined" startIcon={<SaveAsRoundedIcon />}>
+              <Button
+                variant="outlined"
+                startIcon={<SaveAsRoundedIcon />}
+                onClick={handleCreateReward}
+              >
                 Create Reward
               </Button>
             </div>

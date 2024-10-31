@@ -1,12 +1,50 @@
 "use client";
 
 import PaginatedTable from "@/components/Table/PaginatedTable";
-import { RewardConstant, RewardType } from "@/constants/reward.constant";
-import { TableCell, TableRow } from "@mui/material";
+import { useReward } from "@/hooks/useReward";
+import { RewardType } from "@/types/reward.type";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { Button, TableCell, TableRow } from "@mui/material";
 import Image from "next/image";
+import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function RewardDashboardPage() {
-  const rewardHeaders = ["", "Name", "Description", "Price"];
+  const rewardHeaders = [
+    "",
+    "Name",
+    "Description",
+    "Price",
+    "Content",
+    "Category",
+    "Action",
+  ];
+  const { rewards, deleteRewardMutation } = useReward();
+
+  const handleDeleteReward = async (id: string) => {
+    try {
+      await deleteRewardMutation.mutateAsync(id);
+      await Swal.fire({
+        title: "Success",
+        text: "Reward has been successfully deleted!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+    }
+  };
 
   const renderRewardRow = (reward: RewardType) => (
     <TableRow key={reward.name}>
@@ -21,17 +59,45 @@ export default function RewardDashboardPage() {
       </TableCell>
       <TableCell>{reward.name}</TableCell>
       <TableCell>{reward.description}</TableCell>
-      <TableCell>{reward.price} $</TableCell>
+      <TableCell>{reward.price} ฿</TableCell>
+      <TableCell>{reward.content}</TableCell>
+      <TableCell>{reward.category}</TableCell>
+      <TableCell>
+        <div className="flex justify-center space-x-3">
+          <Link href={`/edit/reward/${reward._id}`}>
+            <Button variant="outlined" color="primary" startIcon={<EditIcon />}>
+              Edit
+            </Button>
+          </Link>
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={() => handleDeleteReward(reward._id)}
+          >
+            Delete
+          </Button>
+        </div>
+      </TableCell>
     </TableRow>
   );
 
   return (
-    <div className="flex justify-center container mx-auto py-5">
-      <PaginatedTable
-        headers={rewardHeaders}
-        rows={RewardConstant}
-        renderRow={renderRewardRow}
-      />
+    <div className="flex justify-center flex-col container mx-auto py-5">
+      <div className="flex justify-end mb-10">
+        <Link href="/create/reward">
+          <Button variant="outlined" color="primary" startIcon={<AddIcon />}>
+            Create Reward
+          </Button>
+        </Link>
+      </div>
+      {rewards && (
+        <PaginatedTable
+          headers={rewardHeaders}
+          rows={rewards as RewardType[]}
+          renderRow={renderRewardRow}
+        />
+      )}
     </div>
   );
 }

@@ -6,10 +6,12 @@ export const UserInit = {
   age: 0,
   coin: 0,
   reward: 0,
-  role: [],
+  role: "",
   profileImage: "",
   history: [],
+  redeemedRewards: [],
   createdAt: "",
   updatedAt: "",
+  rewardPoints: 0,
   __v: 0,
 };

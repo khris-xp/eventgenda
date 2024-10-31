@@ -3,78 +3,173 @@
 import { ProfileAvatarURLs } from "@/enums/profile.enum";
 import { useAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/auth.store";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PersonIcon from "@mui/icons-material/Person";
-import StarsIcon from "@mui/icons-material/Stars";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Toolbar from "@mui/material/Toolbar";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
+import { MonetizationOn, Person, Stars } from "@mui/icons-material";
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import * as React from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
 
-const pages = ["Events", "Funding", "Hackathons", "Blogs", "Rewards"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const NAVIGATION_ITEMS = ["Events", "Blogs", "Rewards"] as const;
+const USER_MENU_ITEMS = ["Profile", "Add Coin", "Dashboard", "Logout"] as const;
+const ADMIN_MENU_ITEMS = [
+  "Profile",
+  "Add Coin",
+  "Dashboard",
+  "Logout",
+] as const;
+const USER_ONLY_MENU_ITEMS = ["Profile", "Add Coin", "Logout"] as const;
+const DASHBOARD_MENU_ITEMS = [
+  "Reward",
+  "Event Manager",
+  "Analytics",
+  "Settings",
+] as const;
 
-function Header() {
-  const { userProfile, logout: authLogout } = useAuth();
-  const { user, action } = useAuthStore();
+type UserMenuAction = (typeof USER_MENU_ITEMS)[number];
+type DashboardMenuAction =
+  | "Reward"
+  | "Event Manager"
+  | "Analytics"
+  | "Settings";
+
+const UserMenuContent = ({ userProfile }: { userProfile: any }) => (
+  <>
+    <Typography className="font-bold px-4">
+      {userProfile?.data.fullName}
+    </Typography>
+
+    <Box className="p-2">
+      <UserMenuRow
+        icon={<Person />}
+        text={userProfile?.data.role}
+        isUpperCase
+      />
+      <UserMenuRow
+        icon={<MonetizationOn />}
+        text={`${userProfile?.data.coin} Coins`}
+      />
+      <UserMenuRow
+        icon={<Stars />}
+        text={`${userProfile?.data.rewardPoints} Rewards`}
+      />
+      <hr className="my-3" />
+    </Box>
+  </>
+);
+
+const UserMenuRow = ({
+  icon,
+  text,
+  isUpperCase = false,
+}: {
+  icon: React.ReactNode;
+  text: string;
+  isUpperCase?: boolean;
+}) => (
+  <Box className="flex items-center">
+    <Box className="m-1">{icon}</Box>
+    <Typography
+      className={`p-1 ${isUpperCase ? "uppercase font-semibold" : ""}`}
+    >
+      {text}
+    </Typography>
+  </Box>
+);
+
+const Logo = () => (
+  <Link href="/">
+    <Box
+      component="img"
+      src="/img/logo.png"
+      alt="Eventgenda Logo"
+      sx={{ mr: 2, width: 180, height: "auto", marginLeft: "50px" }}
+    />
+  </Link>
+);
+
+const Navigation = () => (
+  <Box
+    sx={{
+      flexGrow: 1,
+      display: { xs: "none", md: "flex" },
+      justifyContent: "center",
+      gap: "30px",
+      marginLeft: "-100px",
+    }}
+  >
+    {NAVIGATION_ITEMS.map((page) => (
+      <Button key={page} sx={{ my: 2, color: "black", display: "block" }}>
+        <Link href={`/${page.toLowerCase()}`}>
+          <Typography>{page}</Typography>
+        </Link>
+      </Button>
+    ))}
+  </Box>
+);
+
+export default function Header() {
+  const { userProfile } = useAuth();
+  const { action } = useAuthStore();
   const router = useRouter();
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null,
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null,
-  );
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [anchorElDashboard, setAnchorElDashboard] =
+    useState<null | HTMLElement>(null);
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
+  const handleDashboardAction = (action: DashboardMenuAction) => {
+    const actions: Record<DashboardMenuAction, () => void> = {
+      Reward: () => router.push("/rewards/dashboard"),
+      "Event Manager": () => router.push("/events/dashboard"),
+      Analytics: () => router.push("/dashboard/analytics"),
+      Settings: () => router.push("/dashboard/settings"),
+    };
 
-  const handleCloseUserMenu = () => {
+    actions[action]();
+    setAnchorElDashboard(null);
     setAnchorElUser(null);
   };
 
   const handleLogout = async () => {
-    try {
-      const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "You will be logged out of your account!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, log out",
-        cancelButtonText: "No, cancel",
-      });
+    const { isConfirmed } = await Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, log out",
+      cancelButtonText: "No, cancel",
+    });
 
-      if (result.isConfirmed) {
-        action.logout();
-        setTimeout(() => {
-          router.push("/sign-in");
-        }, 100);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
+    if (isConfirmed) {
+      action.logout();
+      localStorage.setItem("navigateToSignIn", "true");
+      window.location.reload();
     }
   };
 
-  const handleMenuItemClick = (setting: string) => {
-    if (setting === "Logout") {
-      handleLogout();
-    } else if (setting === "Profile") {
-      handleCloseUserMenu();
-      router.push("/profile");
-    } else {
-      handleCloseUserMenu();
-    }
+  const handleMenuAction = (action: UserMenuAction) => {
+    const actions: Record<UserMenuAction, () => void> = {
+      Logout: handleLogout,
+      Profile: () => router.push("/profile"),
+      "Add Coin": () => router.push("/payment"),
+      Dashboard: () => setAnchorElDashboard(anchorElUser),
+    };
+
+    actions[action]();
+    setAnchorElUser(null);
   };
+
+  const isAdmin = userProfile?.data.role === "admin";
 
   return (
     <AppBar
@@ -91,128 +186,79 @@ function Header() {
             alignItems: "center",
           }}
         >
-          <Link href="/">
-            <Box
-              component="img"
-              src="/img/logo.png"
-              alt="Eventgenda Logo"
-              sx={{
-                mr: 2,
-                width: 180,
-                height: "auto",
-                marginLeft: "50px",
-              }}
-            />
-          </Link>
-
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-              justifyContent: "center",
-              gap: "30px",
-              marginLeft: "-100px",
-            }}
-          >
-            {pages.map((page) => (
-              <Button
-                key={page}
-                sx={{ my: 2, color: "black", display: "block" }}
-              >
-                <Link href={`/${page.toLowerCase()}`}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
-                </Link>
-              </Button>
-            ))}
-          </Box>
+          <Logo />
+          <Navigation />
 
           {userProfile ? (
-            <Box
-              sx={{ flexGrow: 0, marginRight: "60px", border: "solid 1 gray" }}
-            >
+            <Box sx={{ flexGrow: 0, marginRight: "60px" }}>
               <Tooltip title={userProfile?.data.userName}>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Box sx={{ color: "black" }}>
-                    <div className="flex">
-                      <Box
-                        component="img"
-                        className="rounded-circle article-img w-11"
-                        src={
-                          userProfile?.data.profileImage ||
-                          ProfileAvatarURLs.PROFILE
-                        }
-                        id="img"
-                        alt="Profile Image"
-                        style={{ borderRadius: "50%" }}
-                      />
-                    </div>
-                  </Box>
+                <IconButton onClick={(e) => setAnchorElUser(e.currentTarget)}>
+                  <Box
+                    component="img"
+                    className="rounded-full w-11"
+                    src={
+                      userProfile?.data.profileImage ||
+                      ProfileAvatarURLs.PROFILE
+                    }
+                    alt="Profile"
+                  />
                 </IconButton>
               </Tooltip>
+
               <Menu
                 sx={{ mt: "45px" }}
-                id="menu-appbar"
                 anchorEl={anchorElUser}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                keepMounted
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
                 open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+                onClose={() => setAnchorElUser(null)}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
-                <div className="font-bold ml-4 mr-4">
-                  {userProfile?.data.fullName}
-                </div>
-
-                <div className="p-2">
-                  <div style={{ textTransform: "uppercase", display: "flex" }}>
-                    <PersonIcon className="m-1" />
-                    <div className="p-1 font-semibold">
-                      {userProfile?.data.role}
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex" }}>
-                    <MonetizationOnIcon className="m-1" />
-                    <div className="p-1">
-                      <span className="font-semibold">
-                        {userProfile?.data.coin}
-                      </span>
-                      <span> Coins</span>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex" }}>
-                    <StarsIcon className="m-1" />
-                    <div className="p-1">
-                      <span className="font-semibold">
-                        {userProfile?.data.reward}
-                      </span>
-                      <span> Rewards</span>
-                    </div>
-                  </div>
-                  <hr className="mt-3 mb-3" />
-                </div>
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={() => handleMenuItemClick(setting)}
-                  >
-                    <Typography
+                <UserMenuContent userProfile={userProfile} />
+                {(isAdmin ? ADMIN_MENU_ITEMS : USER_ONLY_MENU_ITEMS).map(
+                  (item) => (
+                    <MenuItem
+                      key={item}
+                      onClick={() => handleMenuAction(item)}
                       sx={{
-                        textAlign: "center",
-                        cursor: setting === "Logout" ? "pointer" : "default",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                     >
-                      {setting}
-                    </Typography>
-                  </MenuItem>
-                ))}
+                      <Typography>{item}</Typography>
+                      {item === "Dashboard" && "▸"}
+                    </MenuItem>
+                  ),
+                )}
               </Menu>
+              {isAdmin && (
+                <Menu
+                  sx={{ mt: "45px", ml: "-10px" }}
+                  anchorEl={anchorElDashboard}
+                  open={Boolean(anchorElDashboard)}
+                  onClose={() => setAnchorElDashboard(null)}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                >
+                  {DASHBOARD_MENU_ITEMS.map((item) => (
+                    <MenuItem
+                      key={item}
+                      onClick={() => handleDashboardAction(item)}
+                    >
+                      <Typography>{item}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              )}
             </Box>
           ) : (
             <Box sx={{ flexGrow: 0, marginRight: "60px" }}>
-              <Typography variant="h6" noWrap sx={{ mr: 2, color: "#4329a6" }}>
-                <Link href="/sign-in">Sign In</Link>
+              <Typography
+                variant="h6"
+                className="cursor-pointer mr-2 text-[#4329a6]"
+                onClick={() => router.push("/sign-in")}
+              >
+                Sign In
               </Typography>
             </Box>
           )}
@@ -221,5 +267,3 @@ function Header() {
     </AppBar>
   );
 }
-
-export default Header;
