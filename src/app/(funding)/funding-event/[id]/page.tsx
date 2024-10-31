@@ -1,5 +1,6 @@
 "use client";
 
+import RankingTable from "@/components/Table/RankingTable";
 import { useAuth } from "@/hooks/useAuth";
 import { useEvent } from "@/hooks/useEvent";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
@@ -8,20 +9,27 @@ import {
   Box,
   Button,
   FormControl,
+  Input,
   InputAdornment,
   InputLabel,
   LinearProgress,
   OutlinedInput,
+  Slider,
   Typography,
 } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
 const FundingEventPage: React.FC = () => {
+  const [sliderValue, setSliderValue] = useState<number>(0);
   const [amount, setAmount] = useState<number>(0);
   const { id } = useParams();
   const { event, donateEventMutation, fundingEventMutation } = useEvent(id);
   const { refetch, userProfile } = useAuth();
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setSliderValue(newValue as number);
+  };
 
   const handleDonateEvent = async (id: string) => {
     try {
@@ -31,16 +39,17 @@ const FundingEventPage: React.FC = () => {
       ) {
         await fundingEventMutation.mutateAsync({
           id,
-          fundingEventDto: { amount },
+          fundingEventDto: { amount: amount + (amount * sliderValue) / 100 },
         });
       } else {
         await donateEventMutation.mutateAsync({
           id,
-          fundingEventDto: { amount },
+          fundingEventDto: { amount: amount + (amount * sliderValue) / 100 },
         });
       }
       refetch();
       setAmount(0);
+      setSliderValue(0);
     } catch (error) {
       console.log(error);
     }
@@ -126,13 +135,52 @@ const FundingEventPage: React.FC = () => {
             }}
           />
         </FormControl>
+
+        <Box sx={{ width: "40%" }}>
+          <Typography id="input-slider" gutterBottom>
+            Tip our service
+          </Typography>
+          <Box className="flex">
+            <Slider
+              size="small"
+              value={sliderValue}
+              onChange={handleSliderChange}
+              aria-label="Small"
+              valueLabelDisplay="auto"
+              sx={{
+                "& .MuiSlider-track": {
+                  backgroundColor: "#8451f1",
+                },
+                "& .MuiSlider-thumb": {
+                  backgroundColor: "#8451f1",
+                  "&:hover, &.Mui-focusVisible": {
+                    boxShadow: "inherit",
+                  },
+                },
+                "& .MuiSlider-thumb.Mui-active": {
+                  backgroundColor: "#9b9b9c",
+                },
+                "& .MuiSlider-rail": {
+                  backgroundColor: "#d0d0d0",
+                },
+              }}
+            />
+            <Input
+              sx={{ width: "10%", ml: 1 }}
+              value={`${sliderValue}%`}
+              margin="dense"
+              inputProps={{
+                "aria-label": "Tip percentage",
+              }}
+            />
+          </Box>
+        </Box>
+
         <Box className="mt-4">
           <Typography variant="h6">Your Donation</Typography>
           <Box className="flex justify-between">
             <Typography>Your Outcome</Typography>
-            <Typography>
-              {amount} {"฿"}
-            </Typography>
+            <Typography>{amount + (amount * sliderValue) / 100} ฿</Typography>
           </Box>
 
           <Box className="flex justify-center mt-3 gap-2">
@@ -166,6 +214,9 @@ const FundingEventPage: React.FC = () => {
               Pay Via Promptpay
             </Button>
           </Box>
+        </Box>
+        <Box>
+          {event?.sponsors && <RankingTable sponsors={event?.sponsors} />}
         </Box>
       </Box>
     </main>
