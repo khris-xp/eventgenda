@@ -15,7 +15,9 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -40,6 +42,7 @@ export default function CreateEventPage() {
     useState<string>("");
   const [registrationEndDate, setRegistrationEndDate] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<string>("");
+  const router = useRouter();
 
   const { categoriesQuery } = useCategory();
   const { locationsQuery } = useLocation();
@@ -64,8 +67,25 @@ export default function CreateEventPage() {
         rules: [],
         status: "pending",
       });
-    } catch (err) {
-      console.log("Error : ", err);
+      router.push("/events");
+
+      await Swal.fire({
+        title: "Success",
+        text: "Event has been created successfully",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
@@ -86,8 +106,15 @@ export default function CreateEventPage() {
           setThumbnail(response.data.url);
         }
       }
-    } catch (err) {
-      console.log("Error : ", err);
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 

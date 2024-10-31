@@ -10,6 +10,7 @@ import { Button, IconButton, TextField } from "@mui/material";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function EditRewardPage() {
   const [name, setName] = useState<string>("");
@@ -40,8 +41,15 @@ export default function EditRewardPage() {
           setImage(response.data.url);
         }
       }
-    } catch (err) {
-      console.log("Error : ", err);
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
@@ -70,9 +78,24 @@ export default function EditRewardPage() {
           category,
         },
       });
+      await Swal.fire({
+        title: "Success",
+        text: "Reward has been successfully updated!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
       router.push("/rewards/dashboard");
     } catch (error) {
-      console.log("Error : ", error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
   return (

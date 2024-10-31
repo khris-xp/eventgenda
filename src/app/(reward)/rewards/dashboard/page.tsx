@@ -9,6 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Button, TableCell, TableRow } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function RewardDashboardPage() {
   const rewardHeaders = [
@@ -25,8 +26,23 @@ export default function RewardDashboardPage() {
   const handleDeleteReward = async (id: string) => {
     try {
       await deleteRewardMutation.mutateAsync(id);
+      await Swal.fire({
+        title: "Success",
+        text: "Reward has been successfully deleted!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
