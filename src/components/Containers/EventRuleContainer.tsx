@@ -1,4 +1,3 @@
-import { UpdateEventRuleDto } from "@/common/dto/event-rule.dto";
 import { UpdateEventDto } from "@/common/dto/event.dto";
 import { useEvent } from "@/hooks/useEvent";
 import { useEventRule } from "@/hooks/useEventRule";
@@ -7,6 +6,7 @@ import { EventType } from "@/types/event.type";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import Swal from "sweetalert2";
 
 type Props = {
   event: EventType;
@@ -44,7 +44,14 @@ export default function EventRuleContainer({ event, eventRule, index }: Props) {
         event: updateEventDto,
       });
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
   return (

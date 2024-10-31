@@ -8,9 +8,11 @@ import LoadingOverlay from "@/components/Loading/LoadingOverlay";
 import { useAuth } from "@/hooks/useAuth";
 import { useEvent } from "@/hooks/useEvent";
 import { formatDate } from "@/utils/day";
+import { formatUppercase } from "@/utils/text";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import EmojiEventsSharpIcon from "@mui/icons-material/EmojiEventsSharp";
 import FindInPageRoundedIcon from "@mui/icons-material/FindInPageRounded";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -22,8 +24,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
-import { formatUppercase } from "@/utils/text";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import Swal from "sweetalert2";
 
 export default function EventDetailPage() {
   const { userProfile } = useAuth();
@@ -42,7 +43,14 @@ export default function EventDetailPage() {
     try {
       await joinEventMutation.mutateAsync(id as string);
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
@@ -50,7 +58,14 @@ export default function EventDetailPage() {
     try {
       await exitEventMutation.mutateAsync(id as string);
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 

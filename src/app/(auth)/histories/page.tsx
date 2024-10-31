@@ -27,6 +27,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { Fragment } from "react";
+import Swal from "sweetalert2";
 
 export default function ProfilePage() {
   const { userProfile } = useAuth();
@@ -38,8 +39,22 @@ export default function ProfilePage() {
   const handleCancelEvent = async (id: string) => {
     try {
       await cancelEventMutation.mutateAsync(id);
+      await Swal.fire({
+        title: "Success",
+        text: "Event has been successfully canceled!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+      });
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 

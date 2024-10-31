@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const FundingEventPage: React.FC = () => {
   const [sliderValue, setSliderValue] = useState<number>(0);
@@ -50,8 +51,24 @@ const FundingEventPage: React.FC = () => {
       refetch();
       setAmount(0);
       setSliderValue(0);
+
+      await Swal.fire({
+        title: "Success",
+        text: "Your donation has been successfully made!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     } catch (error) {
-      console.log(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 

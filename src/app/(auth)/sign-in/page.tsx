@@ -39,10 +39,16 @@ export default function SignInPage() {
       }
       router.push("/");
     } catch (error) {
-      alert(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
-
   const handleEmailChange = (e: EventProps) => {
     setEmail(e.target.value);
   };

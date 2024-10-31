@@ -17,7 +17,9 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -31,6 +33,7 @@ const MenuProps = {
 };
 
 export default function EditEventPage() {
+  const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [limit, setLimit] = useState<number>(0);
@@ -70,8 +73,26 @@ export default function EditEventPage() {
           status: "pending",
         },
       });
-    } catch (err) {
-      console.log("Error : ", err);
+
+      router.push("/events");
+
+      await Swal.fire({
+        title: "Success",
+        text: "Event has been updated",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
@@ -122,8 +143,15 @@ export default function EditEventPage() {
           setThumbnail(response.data.url);
         }
       }
-    } catch (err) {
-      console.log("Error : ", err);
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 

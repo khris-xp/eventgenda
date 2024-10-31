@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function CreateEventRulePage() {
   const [eventRuleName, setEventRuleName] = useState<string>("");
@@ -56,10 +57,25 @@ export default function CreateEventRulePage() {
           id: event._id,
           event: updateEventDto,
         });
+        await Swal.fire({
+          title: "Success",
+          text: "Event Rule has been successfully created!",
+          icon: "success",
+          showCancelButton: true,
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+        });
         router.push(`/event/${event._id}`);
       }
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 

@@ -3,6 +3,7 @@
 import { useReward } from "@/hooks/useReward";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function RewardPageDetail() {
   const { id } = useParams();
@@ -12,9 +13,24 @@ export default function RewardPageDetail() {
   const handleBuyReward = async () => {
     try {
       await addRewardToUserMutation.mutateAsync(id as string);
+      await Swal.fire({
+        title: "Success",
+        text: "Reward has been successfully bought!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
       router.push("/histories");
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 

@@ -9,6 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, TableCell, TableRow } from "@mui/material";
 import Button from "@mui/material/Button";
+import Swal from "sweetalert2";
 
 export default function EventDashboardPage() {
   const {
@@ -35,7 +36,14 @@ export default function EventDashboardPage() {
     try {
       await deleteEventMutation.mutateAsync(id);
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
@@ -43,7 +51,14 @@ export default function EventDashboardPage() {
     try {
       await approveEventMutation.mutateAsync(id);
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
@@ -51,7 +66,14 @@ export default function EventDashboardPage() {
     try {
       await rejectEventMutation.mutateAsync(id);
     } catch (error) {
-      console.error(error);
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 

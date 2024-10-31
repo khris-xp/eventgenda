@@ -10,6 +10,7 @@ import { Button, IconButton, TextField } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function CreateRewardPage() {
   const router = useRouter();
@@ -39,8 +40,15 @@ export default function CreateRewardPage() {
           setImage(response.data.url);
         }
       }
-    } catch (err) {
-      console.log("Error : ", err);
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
@@ -54,9 +62,24 @@ export default function CreateRewardPage() {
         image,
         category,
       });
+      await Swal.fire({
+        title: "Success",
+        text: "Reward has been successfully created!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
       router.push("/rewards/dashboard");
-    } catch (err) {
-      console.log("Error : ", err);
+    } catch (error) {
+      await Swal.fire({
+        title: "Error",
+        text: error as string,
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
     }
   };
 
